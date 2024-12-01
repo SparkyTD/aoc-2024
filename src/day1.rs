@@ -1,24 +1,22 @@
 #[derive(Debug, Clone)]
 struct Node {
-    value: u64,
+    value: u32,
     count: u32,
     left: Option<Box<Node>>,
     right: Option<Box<Node>>,
-    parent: Option<Box<Node>>,
 }
 
 impl Node {
-    fn new(value: u64) -> Node {
+    fn new(value: u32) -> Node {
         Self {
             value,
             count: 1,
             left: None,
             right: None,
-            parent: None,
         }
     }
 
-    fn insert(&mut self, value: u64) {
+    fn insert(&mut self, value: u32) {
         let new_node = Box::new(Node::new(value));
         if value > self.value {
             Self::insert_over(&mut self.right, new_node)
@@ -37,7 +35,7 @@ impl Node {
         }
     }
 
-    fn flatten_into_vec(&self, vec: &mut Vec<u64>) {
+    fn flatten_into_vec(&self, vec: &mut Vec<u32>) {
         if let Some(left_subtree) = &self.left {
             left_subtree.flatten_into_vec(vec);
         }
@@ -48,6 +46,26 @@ impl Node {
 
         if let Some(right_subtree) = &self.right {
             right_subtree.flatten_into_vec(vec);
+        }
+    }
+    
+    fn find_count_of(&self, value: u32) -> u32 {
+        if self.value == value {
+            self.count
+        } else if value < self.value {
+            if let Some(left_subtree) = &self.left {
+                left_subtree.find_count_of(value)
+            } else {
+                0
+            }
+        } else if value > self.value {
+            if let Some(right_subtree) = &self.right {
+                right_subtree.find_count_of(value)
+            } else {
+                0
+            }
+        } else {
+            0
         }
     }
 }
@@ -61,8 +79,8 @@ pub fn day_1() {
     // Read all values into a BST
     for line in input.lines() {
         let mut split = line.split_whitespace();
-        let left = split.next().unwrap().parse::<u64>().unwrap();
-        let right = split.next().unwrap().parse::<u64>().unwrap();
+        let left = split.next().unwrap().parse::<u32>().unwrap();
+        let right = split.next().unwrap().parse::<u32>().unwrap();
 
         for (value, &mut ref mut tree) in [left, right]
             .iter()
@@ -73,25 +91,28 @@ pub fn day_1() {
     }
 
     // Flatten BSTs into sorted vectors
-    let mut left_sorted: Vec<u64> = vec![];
-    left_tree.unwrap().flatten_into_vec(&mut left_sorted);
+    let mut left_sorted: Vec<u32> = vec![];
+    let left_tree = left_tree.unwrap();
+    left_tree.flatten_into_vec(&mut left_sorted);
     left_sorted.reverse();
 
-    let mut right_sorted: Vec<u64> = vec![];
-    right_tree.unwrap().flatten_into_vec(&mut right_sorted);
+    let mut right_sorted: Vec<u32> = vec![];
+    let right_tree = right_tree.unwrap();
+    right_tree.flatten_into_vec(&mut right_sorted);
     right_sorted.reverse();
 
     // Sum up all the differences
     let mut total_differences = 0;
+    let mut similarity_score = 0;
+
     assert_eq!(left_sorted.len(), right_sorted.len(), "The two lists are somehow not the same length!");
 
-    for (mut left, mut right) in left_sorted.iter().zip(right_sorted.iter()) {
-        if left > right {
-            (left, right) = (right, left);
-        }
-
-        total_differences += right - left;
+    for (left, right) in left_sorted.iter().zip(right_sorted.iter()) {
+        let count_in_right = right_tree.find_count_of(*left);
+        similarity_score += *left * count_in_right;
+        total_differences += right.max(left) - left.min(right);
     }
 
     println!("Total differences: {}", total_differences);
+    println!("Similarity score: {}", similarity_score);
 }
