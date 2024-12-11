@@ -86,16 +86,7 @@ pub fn day_11() {
 
     for number in input.split_whitespace().map(|s| s.parse::<u64>()) {
         if let Ok(number) = number {
-            if number == 0 {
-                config.zero_count += 1;
-            } else {
-                let mut map = match get_digit_count(number) % 2 == 0 {
-                    true => &mut config.even_digits,
-                    false => &mut config.odd_digits,
-                };
-
-                increment_hashmap(&mut map, number, 1);
-            }
+            insert_number(&mut config, number, 1);
         }
     }
 
