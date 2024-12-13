@@ -1,6 +1,7 @@
 use std::collections::{HashSet};
-use crate::matrix::Matrix;
-use crate::test_set::TestSet;
+use std::fmt::Display;
+use crate::utils::matrix::Matrix;
+use crate::utils::solution::{solution, Solution};
 
 #[derive(Debug, Eq, PartialEq, Hash, Copy, Clone)]
 enum Orientation {
@@ -116,7 +117,7 @@ fn extract_edges(matrix: &Matrix<bool>) -> Vec<Edge> {
     edges
 }
 
-fn simplify_edges(mut edges: &Vec<Edge>) -> usize {
+fn simplify_edges(edges: &Vec<Edge>) -> usize {
     let mut edges = edges.clone();
     let mut new_edges = Vec::new();
     let mut merged_parts = HashSet::new();
@@ -158,11 +159,9 @@ fn simplify_edges(mut edges: &Vec<Edge>) -> usize {
     let mut intersection_count = 0;
     for i in 0..edges.len() {
         let edge_1 = *edges.get(i).unwrap();
-        let mut intersects_any = false;
         for j in 0..edges.len() {
             let edge_2 = edges.get(j).unwrap();
             if let Some(_) = edge_1.intersect(&edge_2) {
-                intersects_any = true;
                 intersection_count += 1;
                 break;
             }
@@ -172,9 +171,11 @@ fn simplify_edges(mut edges: &Vec<Edge>) -> usize {
     edges.len() + intersection_count
 }
 
-pub fn day_12() {
-    let test_set = TestSet::from(include_str!("../../data/day12.test"));
-    test_set.test_all(|input| {
+#[derive(Default)]
+pub struct GardenGroups;
+
+impl Solution for GardenGroups {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
         let matrix = Matrix::<char>::from_text(input.as_str());
 
         let mut filled_cells: HashSet<(usize, usize)> = HashSet::new();
@@ -195,7 +196,7 @@ pub fn day_12() {
 
                 filled_cells.extend(&region_area);
 
-                let mut edges = extract_edges(&flood_matrix);
+                let edges = extract_edges(&flood_matrix);
                 total_price_p1 += edges.len() * region_area.len();
 
                 let simplified_edges = simplify_edges(&edges);
@@ -203,6 +204,6 @@ pub fn day_12() {
             }
         }
 
-        (total_price_p1, total_price_p2)
-    });
+        solution!(total_price_p1, total_price_p2)
+    }
 }

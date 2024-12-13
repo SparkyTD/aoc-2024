@@ -1,4 +1,5 @@
-use crate::test_set::TestSet;
+use std::fmt::Display;
+use crate::utils::solution::{solution, Solution};
 
 #[derive(Debug)]
 enum ParserState {
@@ -42,9 +43,11 @@ fn next_state(last_state: ParserState, input: char) -> ParserState {
     }
 }
 
-pub fn day_3() {
-    let test_set = TestSet::from(include_str!("../../data/day3.test"));
-    test_set.test_all(|input| {
+#[derive(Default)]
+pub struct MullItOver;
+
+impl Solution for MullItOver {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
         let mut state = ParserState::Invalid;
         let mut num1: u32 = 0;
         let mut num2: u32 = 0;
@@ -77,6 +80,6 @@ pub fn day_3() {
             }
         }
 
-        (sum_1, sum_2)
-    });
+        solution!(sum_1, sum_2)
+    }
 }

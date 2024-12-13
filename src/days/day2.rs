@@ -1,4 +1,5 @@
-use crate::test_set::TestSet;
+use std::fmt::Display;
+use crate::utils::solution::{solution, Solution};
 
 fn is_report_safe(report: &[u32]) -> bool {
     if report.len() == 0 {
@@ -35,7 +36,7 @@ fn is_report_safe(report: &[u32]) -> bool {
 
 fn is_report_safe_with_tolerance(report: &[u32]) -> bool {
     for i in 0..report.len() {
-        let mut report = report.clone().to_vec();
+        let mut report = report.to_vec();
         report.remove(i);
         if is_report_safe(&report) {
             return true;
@@ -44,9 +45,11 @@ fn is_report_safe_with_tolerance(report: &[u32]) -> bool {
     false
 }
 
-pub fn day_2() {
-    let test_set = TestSet::from(include_str!("../../data/day2.test"));
-    test_set.test_all(|input| {
+#[derive(Default)]
+pub struct RedNosedReports;
+
+impl Solution for RedNosedReports {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
         let mut safe_count = 0;
         let mut tolerance_safe_count = 0;
         for report_line in input.lines() {
@@ -65,6 +68,6 @@ pub fn day_2() {
             }
         }
 
-        (safe_count, safe_count + tolerance_safe_count)
-    });
+        solution!(safe_count, safe_count + tolerance_safe_count)
+    }
 }

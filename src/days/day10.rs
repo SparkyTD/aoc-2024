@@ -1,6 +1,7 @@
 use std::collections::HashSet;
-use crate::matrix::Matrix;
-use crate::test_set::TestSet;
+use std::fmt::Display;
+use crate::utils::matrix::Matrix;
+use crate::utils::solution::{solution, Solution};
 
 fn get_destination_count(map: &Matrix<u8>, start_x: i16, start_y: i16, prev_value: Option<u8>) -> Option<HashSet<(i16, i16)>> {
     if start_x < 0 || start_x >= map.width() as i16 || start_y < 0 || start_y >= map.height() as i16 {
@@ -66,10 +67,12 @@ fn get_unique_trail_count(map: &Matrix<u8>, start_x: i16, start_y: i16, prev_val
     up + down + left + right
 }
 
-pub fn day_10() {
-    let test_set = TestSet::from(include_str!("../../data/day10.test"));
-    test_set.test_all(|input| {
-        let mut map: Matrix<u8> = Matrix::<char>::from_text(input.as_str())
+#[derive(Default)]
+pub struct HoofIt;
+
+impl Solution for HoofIt {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
+        let map: Matrix<u8> = Matrix::<char>::from_text(input.as_str())
             .map(|c| c.to_digit(10).unwrap() as u8);
         let mut trailheads: Vec<(u8, u8)> = Vec::new(); // (x, y)
         map.each(|x, y, height| {
@@ -86,6 +89,6 @@ pub fn day_10() {
             .map(|&t| get_unique_trail_count(&map, t.0 as i16, t.1 as i16, None) as usize)
             .sum::<usize>();
 
-        (score, rating)
-    });
+        solution!(score, rating)
+    }
 }

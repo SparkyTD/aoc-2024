@@ -1,5 +1,6 @@
-use crate::matrix::Matrix;
-use crate::test_set::TestSet;
+use std::fmt::Display;
+use crate::utils::matrix::Matrix;
+use crate::utils::solution::{solution, Solution};
 
 fn check_star(matrix: &Matrix<char>, word: &str, x: u32, y: u32, dx: i8, dy: i8) -> u8 {
     let len = word.len();
@@ -61,14 +62,16 @@ fn try_find_x_mas(matrix: &Matrix<char>, x: u32, y: u32) -> bool {
     }
 }
 
-pub fn day_4() {
-    let test_set = TestSet::from(include_str!("../../data/day4.test"));
-    test_set.test_all(|input| {
+#[derive(Default)]
+pub struct CeresSearch;
+
+impl Solution for CeresSearch {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
         let matrix = Matrix::<char>::from_text(&input).map(|c| c.to_ascii_uppercase());
 
         let mut total: u32 = 0;
         let mut total_cross: u32 = 0;
-        matrix.each(|x, y, ch| {
+        matrix.each(|x, y, _| {
             total += try_count_xmas_star(&matrix, "XMAS", *x as u32, *y as u32) as u32;
 
             if try_find_x_mas(&matrix, *x as u32, *y as u32) {
@@ -76,6 +79,6 @@ pub fn day_4() {
             }
         });
 
-        (total_cross, total)
-    });
+        solution!(total_cross, total)
+    }
 }

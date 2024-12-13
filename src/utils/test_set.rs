@@ -1,6 +1,7 @@
 use std::fmt::Display;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 use colored::Colorize;
+use crate::utils::aoc::format_elapsed;
 
 pub struct Test {
     name: String,
@@ -41,6 +42,12 @@ impl Test {
     }
 }
 
+pub struct TestRunResult {
+    pub elapsed: Duration,
+    pub part1_success: Option<bool>,
+    pub part2_success: Option<bool>,
+}
+
 pub struct TestSet {
     tests: Vec<Test>,
 }
@@ -69,7 +76,7 @@ impl TestSet {
                     part2_name: part2_name.clone(),
                 });
             } else if line.trim().to_lowercase().starts_with("@part1") {
-                if let Some(mut current_test) = current_test.as_mut() {
+                if let Some(current_test) = current_test.as_mut() {
                     let mut split = line.split_whitespace();
                     _ = split.next();
                     current_test.output_text_1.replace(split.next().unwrap().to_owned());
@@ -77,7 +84,7 @@ impl TestSet {
                     panic!("Invalid data on line {}. Possible missing @test directive.", line_number);
                 }
             } else if line.trim().to_lowercase().starts_with("@part2") {
-                if let Some(mut current_test) = current_test.as_mut() {
+                if let Some(current_test) = current_test.as_mut() {
                     let mut split = line.split_whitespace();
                     _ = split.next();
                     current_test.output_text_2.replace(split.next().unwrap().to_owned());
@@ -93,7 +100,7 @@ impl TestSet {
                 _ = split.next();
                 part2_name = split.remainder().unwrap().to_owned();
             } else {
-                if let Some(mut current_test) = current_test.as_mut() {
+                if let Some(current_test) = current_test.as_mut() {
                     current_test.input_text.push_str(line);
                     current_test.input_text.push_str("\n");
                 }
@@ -115,14 +122,19 @@ impl TestSet {
         &self.tests[index]
     }
 
-    pub fn test_all<F, R>(&self, f: F)
+    pub fn len(&self) -> usize {
+        self.tests.len()
+    }
+
+    pub fn test_all<F, R>(&self, f: F) -> bool
     where
         F: Fn(String) -> (R, R),
         R: Display,
     {
         let mut all_successful = true;
         for i in 0..self.tests.len() {
-            all_successful &= self.test_one(i, &f);
+            let result = self.test_one(i, &f);
+            all_successful &= result.part1_success.unwrap_or(true) && result.part2_success.unwrap_or(true);
         }
 
         println!();
@@ -131,9 +143,11 @@ impl TestSet {
         } else {
             println!("Some test have {}!", "failed".red().bold())
         }
+
+        all_successful
     }
 
-    pub fn test_one<F, R>(&self, index: usize, f: F) -> bool
+    pub fn test_one<F, R>(&self, index: usize, f: F) -> TestRunResult
     where
         F: Fn(String) -> (R, R),
         R: Display,
@@ -147,15 +161,12 @@ impl TestSet {
         println!("{} Results:", test.name.bold());
         let test1_result = test.check_result_1(part1.to_string().as_str());
         let test2_result = test.check_result_2(part2.to_string().as_str());
+        println!("{}: {}", "Elapsed time".bold(), format_elapsed(elapsed).purple());
 
-        let millis = elapsed.as_millis();
-        let time_result = if millis < 1000 {
-            format!("{}ms", millis)
-        } else {
-            format!("{}s {}ms", elapsed.as_secs(), millis % 1000)
-        };
-        println!("{}: {}", "Elapsed time".bold(), time_result.purple());
-
-        test1_result.unwrap_or(true) && test2_result.unwrap_or(true)
+        TestRunResult {
+            part1_success: test1_result,
+            part2_success: test2_result,
+            elapsed,
+        }
     }
 }

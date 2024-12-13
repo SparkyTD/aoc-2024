@@ -1,5 +1,6 @@
 use std::collections::{HashMap, HashSet};
-use crate::test_set::TestSet;
+use std::fmt::Display;
+use crate::utils::solution::{solution, Solution};
 
 fn fix_page_order(ordering_rules: &HashMap<u8, HashSet<u8>>, pages: &mut Vec<u8>) -> bool {
     let mut num_indices: HashMap<u8, u8> = HashMap::new();
@@ -27,9 +28,11 @@ fn fix_page_order(ordering_rules: &HashMap<u8, HashSet<u8>>, pages: &mut Vec<u8>
     false
 }
 
-pub fn day_5() {
-    let test_set = TestSet::from(include_str!("../../data/day5.test"));
-    test_set.test_all(|input| {
+#[derive(Default)]
+pub struct PrintQueue;
+
+impl Solution for PrintQueue {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
         let mut ordering_rules: HashMap<u8, HashSet<u8>> = HashMap::new();
         let mut reading_page_list = false;
 
@@ -67,6 +70,6 @@ pub fn day_5() {
             }
         }
 
-        (correct_middle_total, fixed_middle_total)
-    });
+        solution!(correct_middle_total, fixed_middle_total)
+    }
 }

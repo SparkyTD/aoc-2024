@@ -8,6 +8,7 @@ pub struct Matrix<T> {
     data: Vec<Vec<T>>,
 }
 
+#[allow(dead_code)]
 impl<T> Matrix<T>
 where
     T: Default + Clone,
@@ -84,6 +85,7 @@ where
     }
 }
 
+#[allow(dead_code)]
 impl<T> Matrix<T>
 where
     T: Default + Clone + Eq + PartialEq,

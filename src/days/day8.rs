@@ -1,10 +1,13 @@
 use std::collections::{HashMap, HashSet};
-use crate::matrix::Matrix;
-use crate::test_set::TestSet;
+use std::fmt::Display;
+use crate::utils::matrix::Matrix;
+use crate::utils::solution::{solution, Solution};
 
-pub fn day_8() {
-    let test_set = TestSet::from(include_str!("../../data/day8.test"));
-    test_set.test_all(|input| {
+#[derive(Default)]
+pub struct ResonantCollinearity;
+
+impl Solution for ResonantCollinearity {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
         let map = Matrix::<char>::from_text(&input);
         let mut antennas: HashMap<(u8, u8), char> = HashMap::new();
         let mut antinodes_simple: HashSet<(u8, u8)> = HashSet::new();
@@ -47,6 +50,6 @@ pub fn day_8() {
             }
         }
 
-        (antinodes_simple.len(), antinodes_all.len())
-    });
+        solution!(antinodes_simple.len(), antinodes_all.len())
+    }
 }

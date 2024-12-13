@@ -1,4 +1,5 @@
-use crate::test_set::TestSet;
+use std::fmt::Display;
+use crate::utils::solution::{solution, Solution};
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 enum Operator {
@@ -80,11 +81,11 @@ fn test_input(result: u64, components: &[u64], enable_concat: bool) -> bool {
     false
 }
 
-pub fn day_7() {
-    let input = include_str!("../../data/day7.test");
+#[derive(Default)]
+pub struct BridgeRepair;
 
-    let test_set = TestSet::from(include_str!("../../data/day7.test"));
-    test_set.test_all(|input| {
+impl Solution for BridgeRepair {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
         let mut sum_part1 = 0;
         let mut sum_part2 = 0;
         for line in input.lines() {
@@ -101,6 +102,6 @@ pub fn day_7() {
             }
         }
 
-        (sum_part1, sum_part2)
-    });
+        solution!(sum_part1, sum_part2)
+    }
 }

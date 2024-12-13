@@ -1,4 +1,5 @@
-use crate::test_set::TestSet;
+use std::fmt::Display;
+use crate::utils::solution::{solution, Solution};
 
 #[derive(Debug, Clone)]
 struct Node {
@@ -50,7 +51,7 @@ impl Node {
             right_subtree.flatten_into_vec(vec);
         }
     }
-    
+
     fn find_count_of(&self, value: u32) -> u32 {
         if self.value == value {
             self.count
@@ -72,10 +73,11 @@ impl Node {
     }
 }
 
-pub fn day_1() {
+#[derive(Default)]
+pub struct HistorianHysteria;
 
-    let test_set = TestSet::from(include_str!("../../data/day1.test"));
-    test_set.test_all(|input| {
+impl Solution for HistorianHysteria {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
         let mut left_tree: Option<Box<Node>> = None;
         let mut right_tree: Option<Box<Node>> = None;
 
@@ -116,6 +118,6 @@ pub fn day_1() {
             total_differences += right.max(left) - left.min(right);
         }
 
-        (total_differences, similarity_score)
-    });
+        solution!(total_differences, similarity_score)
+    }
 }

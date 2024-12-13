@@ -1,8 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
-use std::time::Instant;
-use crate::matrix::Matrix;
-use crate::test_set::TestSet;
+use crate::utils::matrix::Matrix;
+use crate::utils::solution::{solution, Solution};
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Hash)]
 enum Facing {
@@ -99,8 +98,8 @@ fn process_room(room: &mut Room) -> RoomState {
     room.visited_tiles.insert((room.guard.pos_x, room.guard.pos_y), room.guard.facing);
 
     let guard_delta = room.guard.facing.get_delta();
-    let mut guard_next_x = room.guard.pos_x as i32 + guard_delta.0;
-    let mut guard_next_y = room.guard.pos_y as i32 + guard_delta.1;
+    let guard_next_x = room.guard.pos_x as i32 + guard_delta.0;
+    let guard_next_y = room.guard.pos_y as i32 + guard_delta.1;
 
     if guard_next_x < 0 || guard_next_y < 0 || guard_next_x >= room.width as i32 || guard_next_y >= room.height as i32 {
         // Guard has exited the room, return None
@@ -118,9 +117,11 @@ fn process_room(room: &mut Room) -> RoomState {
     }
 }
 
-pub fn day_6() {
-    let test_set = TestSet::from(include_str!("../../data/day6.test"));
-    test_set.test_all(|input| {
+#[derive(Default)]
+pub struct GuardGallivant;
+
+impl Solution for GuardGallivant {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
         let input_matrix = Matrix::<char>::from_text(input.as_str());
 
         // Part 1
@@ -189,6 +190,6 @@ pub fn day_6() {
             }
         }
 
-        (room_clone.visited_tiles.len(), possible_obstacle_count)
-    });
+        solution!(room_clone.visited_tiles.len(), possible_obstacle_count)
+    }
 }

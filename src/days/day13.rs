@@ -1,4 +1,5 @@
-use crate::test_set::TestSet;
+use std::fmt::Display;
+use crate::utils::solution::{solution, Solution};
 
 fn solve_linear_eq(a1: i64, b1: i64, c1: i64, a2: i64, b2: i64, c2: i64) -> (i64, i64) {
     let d = a1 * b2 - a2 * b1;
@@ -11,9 +12,11 @@ fn solve_linear_eq(a1: i64, b1: i64, c1: i64, a2: i64, b2: i64, c2: i64) -> (i64
     (x, y)
 }
 
-pub fn day_13() {
-    let test_set = TestSet::from(include_str!("../../data/day13.test"));
-    test_set.test_all(|input| {
+#[derive(Default)]
+pub struct ClawContraption;
+
+impl Solution for ClawContraption {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
         let mut button_a_x: i64 = 0;
         let mut button_a_y: i64 = 0;
         let mut button_b_x: i64 = 0;
@@ -59,6 +62,6 @@ pub fn day_13() {
             }
         }
 
-        (total_tokens_p1, total_tokens_p2)
-    });
+        solution!(total_tokens_p1, total_tokens_p2)
+    }
 }

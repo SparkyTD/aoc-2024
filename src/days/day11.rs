@@ -1,5 +1,6 @@
 use std::collections::{HashMap};
-use crate::test_set::TestSet;
+use std::fmt::Display;
+use crate::utils::solution::{solution, Solution};
 
 #[derive(Default, Debug)]
 struct StoneConfiguration {
@@ -80,9 +81,11 @@ fn blink(old_config: StoneConfiguration) -> StoneConfiguration {
     new_config
 }
 
-pub fn day_11() {
-    let test_set = TestSet::from(include_str!("../../data/day11.test"));
-    test_set.test_all(|input| {
+#[derive(Default)]
+pub struct PlutonianPebbles;
+
+impl Solution for PlutonianPebbles {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
         let mut config = StoneConfiguration::default();
 
         for number in input.split_whitespace().map(|s| s.parse::<u64>()) {
@@ -101,6 +104,6 @@ pub fn day_11() {
         }
         let part2 = config.stone_count();
 
-        (part1, part2)
-    });
+        solution!(part1, part2)
+    }
 }

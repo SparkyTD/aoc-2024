@@ -1,5 +1,5 @@
-use std::fmt::{Debug, Write};
-use crate::test_set::TestSet;
+use std::fmt::{Debug, Display, Write};
+use crate::utils::solution::{solution, Solution};
 
 #[derive(Clone)]
 enum Block {
@@ -39,9 +39,11 @@ impl Debug for Area {
     }
 }
 
-pub fn day_9() {
-    let test_set = TestSet::from(include_str!("../../data/day9.test"));
-    test_set.test_all(|input| {
+#[derive(Default)]
+pub struct DiskFragmenter;
+
+impl Solution for DiskFragmenter {
+    fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
         let input = input.chars().filter(|c| c.is_digit(10) || *c == '.')
             .map(|c| c.to_digit(10).unwrap() as u8);
 
@@ -117,7 +119,7 @@ pub fn day_9() {
         }
 
         // Calculate the checksum
-        let mut compressed = compressed.iter().flat_map(|a| match a {
+        let compressed = compressed.iter().flat_map(|a| match a {
             Area::FreeSpace(l) => vec![Block::FreeSpace; *l as usize],
             Area::FileData(l, data) => vec![Block::File(*data); *l as usize],
         }).collect::<Vec<_>>();
@@ -131,6 +133,6 @@ pub fn day_9() {
             position += 1;
         }
 
-        (total1, total2)
-    });
+        solution!(total1, total2)
+    }
 }
