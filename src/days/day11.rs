@@ -1,5 +1,5 @@
 use std::collections::{HashMap};
-use std::time::Instant;
+use crate::test_set::TestSet;
 
 #[derive(Default, Debug)]
 struct StoneConfiguration {
@@ -81,26 +81,26 @@ fn blink(old_config: StoneConfiguration) -> StoneConfiguration {
 }
 
 pub fn day_11() {
-    let input = include_str!("../data/day11.txt");
-    let mut config = StoneConfiguration::default();
+    let test_set = TestSet::from(include_str!("../../data/day11.test"));
+    test_set.test_all(|input| {
+        let mut config = StoneConfiguration::default();
 
-    for number in input.split_whitespace().map(|s| s.parse::<u64>()) {
-        if let Ok(number) = number {
-            insert_number(&mut config, number, 1);
+        for number in input.split_whitespace().map(|s| s.parse::<u64>()) {
+            if let Ok(number) = number {
+                insert_number(&mut config, number, 1);
+            }
         }
-    }
 
-    let start_time = Instant::now();
-    for _ in 0..25 {
-        config = blink(config);
-    }
-    println!("After 25 blinks: {:?}", config.stone_count());
+        for _ in 0..25 {
+            config = blink(config);
+        }
+        let part1 = config.stone_count();
 
-    for _ in 0..50 {
-        config = blink(config);
-    }
-    println!("After 75 blinks: {:?}", config.stone_count());
+        for _ in 0..50 {
+            config = blink(config);
+        }
+        let part2 = config.stone_count();
 
-    let elapsed = start_time.elapsed();
-    println!("Elapsed time: {}ms", elapsed.as_millis());
+        (part1, part2)
+    });
 }

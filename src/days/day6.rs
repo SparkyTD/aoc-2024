@@ -1,6 +1,8 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
 use std::time::Instant;
+use crate::matrix::Matrix;
+use crate::test_set::TestSet;
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Hash)]
 enum Facing {
@@ -117,78 +119,76 @@ fn process_room(room: &mut Room) -> RoomState {
 }
 
 pub fn day_6() {
-    let input = include_str!("../data/day6.txt");
+    let test_set = TestSet::from(include_str!("../../data/day6.test"));
+    test_set.test_all(|input| {
+        let input_matrix = Matrix::<char>::from_text(input.as_str());
 
-    let input_matrix = input.lines()
-        .map(|l| l.chars()
-            .collect::<Vec<char>>())
-        .collect::<Vec<Vec<char>>>();
+        // Part 1
+        let mut room = Room {
+            obstacles: HashSet::new(),
+            visited_tiles: HashMap::new(),
+            visited_tiles_and_facings: HashSet::new(),
+            possible_new_obstacles: HashSet::new(),
+            guard: Guard { facing: Facing::Up, pos_x: 0, pos_y: 0 },
+            width: input_matrix.width(),
+            height: input_matrix.height(),
+        };
 
-    let mut room = Room {
-        obstacles: HashSet::new(),
-        visited_tiles: HashMap::new(),
-        visited_tiles_and_facings: HashSet::new(),
-        possible_new_obstacles: HashSet::new(),
-        guard: Guard { facing: Facing::Up, pos_x: 0, pos_y: 0 },
-        width: input_matrix[0].len(),
-        height: input_matrix.len(),
-    };
-
-    for x in 0..room.width {
-        for y in 0..room.height {
-            match input_matrix[y][x] {
-                '#' => {
-                    room.obstacles.insert((x, y));
-                }
-                '^' => {
-                    room.guard.facing = Facing::Up;
-                    room.guard.pos_x = x;
-                    room.guard.pos_y = y;
-                }
-                'v' => {
-                    room.guard.facing = Facing::Down;
-                    room.guard.pos_x = x;
-                    room.guard.pos_y = y;
-                }
-                '>' => {
-                    room.guard.facing = Facing::Right;
-                    room.guard.pos_x = x;
-                    room.guard.pos_y = y;
-                }
-                '<' => {
-                    room.guard.facing = Facing::Left;
-                    room.guard.pos_x = x;
-                    room.guard.pos_y = y;
-                }
-                _ => {}
-            };
+        for x in 0..room.width {
+            for y in 0..room.height {
+                match input_matrix.get(x, y) {
+                    Some('#') => {
+                        room.obstacles.insert((x, y));
+                    }
+                    Some('^') => {
+                        room.guard.facing = Facing::Up;
+                        room.guard.pos_x = x;
+                        room.guard.pos_y = y;
+                    }
+                    Some('v') => {
+                        room.guard.facing = Facing::Down;
+                        room.guard.pos_x = x;
+                        room.guard.pos_y = y;
+                    }
+                    Some('>') => {
+                        room.guard.facing = Facing::Right;
+                        room.guard.pos_x = x;
+                        room.guard.pos_y = y;
+                    }
+                    Some('<') => {
+                        room.guard.facing = Facing::Left;
+                        room.guard.pos_x = x;
+                        room.guard.pos_y = y;
+                    }
+                    _ => {}
+                };
+            }
         }
-    }
 
-    let mut room_clone = room.clone();
-    while let RoomState::GuardPatrolling = process_room(&mut room_clone) {
-        continue;
-    }
-    println!("Visited {} tiles (?= 4789)", room_clone.visited_tiles.len());
-
-    let now = Instant::now();
-    let mut possible_obstacle_count = 0;
-    for (x, y) in room_clone.visited_tiles.keys() {
         let mut room_clone = room.clone();
-        room_clone.obstacles.insert((*x, *y));
-        loop {
-            let state = process_room(&mut room_clone);
-            if state == RoomState::GuardPatrolling {
-                continue;
-            }
-
-            if state == RoomState::GuardInLoop {
-                possible_obstacle_count += 1;
-            }
-
-            break;
+        while let RoomState::GuardPatrolling = process_room(&mut room_clone) {
+            continue;
         }
-    }
-    let elapsed = now.elapsed();
-    println!("Found {} possible obstacle positions (?= 1304) in {}s", possible_obstacle_count, elapsed.as_secs());
+
+        // Part 2
+        let mut possible_obstacle_count = 0;
+        for (x, y) in room_clone.visited_tiles.keys() {
+            let mut room_clone = room.clone();
+            room_clone.obstacles.insert((*x, *y));
+            loop {
+                let state = process_room(&mut room_clone);
+                if state == RoomState::GuardPatrolling {
+                    continue;
+                }
+
+                if state == RoomState::GuardInLoop {
+                    possible_obstacle_count += 1;
+                }
+
+                break;
+            }
+        }
+
+        (room_clone.visited_tiles.len(), possible_obstacle_count)
+    });
 }

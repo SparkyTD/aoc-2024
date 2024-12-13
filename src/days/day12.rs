@@ -161,9 +161,8 @@ fn simplify_edges(mut edges: &Vec<Edge>) -> usize {
         let mut intersects_any = false;
         for j in 0..edges.len() {
             let edge_2 = edges.get(j).unwrap();
-            if let Some(intersection) = edge_1.intersect(&edge_2) {
+            if let Some(_) = edge_1.intersect(&edge_2) {
                 intersects_any = true;
-                // println!("Intersection: {:?} x {:?}  ->  {:?}", edge_1, edge_2, intersection);
                 intersection_count += 1;
                 break;
             }
@@ -174,45 +173,36 @@ fn simplify_edges(mut edges: &Vec<Edge>) -> usize {
 }
 
 pub fn day_12() {
-    let test_set = TestSet::from(include_str!("../data/day12.test"));
-    let test = test_set.get_test(3);
-    let input = test.get_input();
+    let test_set = TestSet::from(include_str!("../../data/day12.test"));
+    test_set.test_all(|input| {
+        let matrix = Matrix::<char>::from_text(input.as_str());
 
-    let matrix = Matrix::<char>::from_text(input.as_str());
+        let mut filled_cells: HashSet<(usize, usize)> = HashSet::new();
+        let mut total_price_p1 = 0;
+        let mut total_price_p2 = 0;
 
-    let mut filled_cells: HashSet<(usize, usize)> = HashSet::new();
-    let mut total_price_p1 = 0;
-    let mut total_price_p2 = 0;
+        for x in 0..matrix.height() {
+            for y in 0..matrix.width() {
+                if filled_cells.contains(&(x, y)) {
+                    continue;
+                }
 
-    for x in 0..matrix.height() {
-        for y in 0..matrix.width() {
-            if filled_cells.contains(&(x, y)) {
-                continue;
-            }
+                let mut region_area: HashSet<(usize, usize)> = HashSet::new();
 
-            let mut region_area: HashSet<(usize, usize)> = HashSet::new();
+                let flood_matrix = matrix.flood_eq(x, y, |x: &usize, y: &usize| {
+                    region_area.insert((*x, *y));
+                });
 
-            let flood_matrix = matrix.flood_eq(x, y, |x: &usize, y: &usize| {
-                region_area.insert((*x, *y));
-            });
+                filled_cells.extend(&region_area);
 
-            filled_cells.extend(&region_area);
+                let mut edges = extract_edges(&flood_matrix);
+                total_price_p1 += edges.len() * region_area.len();
 
-            let mut edges = extract_edges(&flood_matrix);
-            total_price_p1 += edges.len() * region_area.len();
-
-            let simplified_edges = simplify_edges(&edges);
-            total_price_p2 += simplified_edges * region_area.len();
-
-            if matrix.width() < 64 && matrix.height() < 64 {
-                println!("\nNew region starts at ({},{})", x, y);
-                println!("{:?}", flood_matrix.map(|b| if *b { 1 } else { 0 }));
-                println!("Sides: {}", simplified_edges);
+                let simplified_edges = simplify_edges(&edges);
+                total_price_p2 += simplified_edges * region_area.len();
             }
         }
-    }
-    println!();
 
-    test.check_result_1(format!("{}", total_price_p1).as_str());
-    test.check_result_2(format!("{}", total_price_p2).as_str());
+        (total_price_p1, total_price_p2)
+    });
 }

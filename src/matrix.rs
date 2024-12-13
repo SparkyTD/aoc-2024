@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::{Debug, Display, Formatter};
 
 #[derive(Default)]
@@ -130,6 +130,35 @@ where
         if y < self.height - 1 {
             self.flood_eq_impl(x, y + 1, value, f, &mut visit_mat);
         }
+    }
+
+    pub fn each<F>(&self, mut f: F)
+    where
+        F: FnMut(&usize, &usize, &T),
+    {
+        for y in 0..self.height {
+            for x in 0..self.width {
+                f(&x, &y, &self.get(x, y).unwrap());
+            }
+        }
+    }
+
+    pub fn positions<F>(&self, mut f: F) -> HashSet<(usize, usize)>
+    where
+        F: FnMut(&usize, &usize, &T) -> bool,
+    {
+        let mut positions = HashSet::new();
+
+        for x in 0..self.width {
+            for y in 0..self.height {
+                let val = self.get(x, y).unwrap();
+                if f(&x, &y, &val) {
+                    positions.insert((x, y));
+                }
+            }
+        }
+
+        positions
     }
 }
 

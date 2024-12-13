@@ -1,3 +1,5 @@
+use crate::test_set::TestSet;
+
 #[derive(Debug)]
 enum ParserState {
     Invalid,
@@ -41,37 +43,40 @@ fn next_state(last_state: ParserState, input: char) -> ParserState {
 }
 
 pub fn day_3() {
-    let input = include_str!("../data/day3.txt");
-    let mut state = ParserState::Invalid;
-    let mut num1: u32 = 0;
-    let mut num2: u32 = 0;
-    let mut sum: u32 = 0;
-    let mut last_cond_part = true;
-    let mut last_cond = true;
-    for c in input.chars() {
-        state = next_state(state, c);
-        println!("{:?}", state);
-        match state {
-            ParserState::Num1Digit(d) => num1 = num1 * 10 + d as u32,
-            ParserState::Num2Digit(d) => num2 = num2 * 10 + d as u32,
-            ParserState::EndMulInstruction => {
-                if last_cond {
-                    sum += num1 * num2;
-                }
-                (num1, num2) = (0, 0);
-            },
-            ParserState::Invalid => {
-                (num1, num2) = (0, 0);
-            },
+    let test_set = TestSet::from(include_str!("../../data/day3.test"));
+    test_set.test_all(|input| {
+        let mut state = ParserState::Invalid;
+        let mut num1: u32 = 0;
+        let mut num2: u32 = 0;
+        let mut sum_1: u32 = 0;
+        let mut sum_2: u32 = 0;
+        let mut last_cond_part = true;
+        let mut last_cond = true;
+        for c in input.chars() {
+            state = next_state(state, c);
+            match state {
+                ParserState::Num1Digit(d) => num1 = num1 * 10 + d as u32,
+                ParserState::Num2Digit(d) => num2 = num2 * 10 + d as u32,
+                ParserState::EndMulInstruction => {
+                    if last_cond {
+                        sum_2 += num1 * num2;
+                    }
+                    sum_1 += num1 * num2;
+                    (num1, num2) = (0, 0);
+                },
+                ParserState::Invalid => {
+                    (num1, num2) = (0, 0);
+                },
 
-            ParserState::DoIns(_) => last_cond_part = true,
-            ParserState::DontIns(_) => last_cond_part = false,
+                ParserState::DoIns(_) => last_cond_part = true,
+                ParserState::DontIns(_) => last_cond_part = false,
 
-            ParserState::EndCondInsInstruction => last_cond = last_cond_part,
+                ParserState::EndCondInsInstruction => last_cond = last_cond_part,
 
-            _ => continue,
+                _ => continue,
+            }
         }
-    }
 
-    println!("Sum is {}", sum);
+        (sum_1, sum_2)
+    });
 }

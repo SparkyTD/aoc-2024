@@ -1,11 +1,13 @@
 use std::collections::HashSet;
+use crate::matrix::Matrix;
+use crate::test_set::TestSet;
 
-fn get_destination_count(map: &Vec<Vec<u8>>, start_x: i16, start_y: i16, prev_value: Option<u8>) -> Option<HashSet<(i16, i16)>> {
-    if start_x < 0 || start_x >= map[0].len() as i16 || start_y < 0 || start_y >= map.len() as i16 {
+fn get_destination_count(map: &Matrix<u8>, start_x: i16, start_y: i16, prev_value: Option<u8>) -> Option<HashSet<(i16, i16)>> {
+    if start_x < 0 || start_x >= map.width() as i16 || start_y < 0 || start_y >= map.height() as i16 {
         return None;
     }
 
-    let current_value = map[start_y as usize][start_x as usize];
+    let current_value = *map.get(start_x as usize, start_y as usize).unwrap();
     if let Some(prev_value) = prev_value {
         if current_value != prev_value + 1 {
             return None;
@@ -40,12 +42,12 @@ fn get_destination_count(map: &Vec<Vec<u8>>, start_x: i16, start_y: i16, prev_va
     Some(hash_set)
 }
 
-fn get_unique_trail_count(map: &Vec<Vec<u8>>, start_x: i16, start_y: i16, prev_value: Option<u8>) -> u8 {
-    if start_x < 0 || start_x >= map[0].len() as i16 || start_y < 0 || start_y >= map.len() as i16 {
+fn get_unique_trail_count(map: &Matrix<u8>, start_x: i16, start_y: i16, prev_value: Option<u8>) -> u8 {
+    if start_x < 0 || start_x >= map.width() as i16 || start_y < 0 || start_y >= map.height() as i16 {
         return 0;
     }
 
-    let current_value = map[start_y as usize][start_x as usize];
+    let current_value = *map.get(start_x as usize, start_y as usize).unwrap();
     if let Some(prev_value) = prev_value {
         if current_value != prev_value + 1 {
             return 0;
@@ -65,35 +67,25 @@ fn get_unique_trail_count(map: &Vec<Vec<u8>>, start_x: i16, start_y: i16, prev_v
 }
 
 pub fn day_10() {
-    let input = include_str!("../data/day10.txt");
-
-    let mut map: Vec<Vec<u8>> = Vec::new(); // [y][x]
-    let mut trailheads: Vec<(u8, u8)> = Vec::new(); // (x, y)
-
-    for line in input.lines() {
-        let mut line_vec = Vec::new();
-        for (i, ch) in line.char_indices() {
-            let height = if let Some(height) = ch.to_digit(10) {
-                height
-            } else {
-                255
-            } as u8;
-            line_vec.push(height);
-
-            if height == 0 {
-                trailheads.push((i as u8, map.len() as u8));
+    let test_set = TestSet::from(include_str!("../../data/day10.test"));
+    test_set.test_all(|input| {
+        let mut map: Matrix<u8> = Matrix::<char>::from_text(input.as_str())
+            .map(|c| c.to_digit(10).unwrap() as u8);
+        let mut trailheads: Vec<(u8, u8)> = Vec::new(); // (x, y)
+        map.each(|x, y, height| {
+            if *height == 0 {
+                trailheads.push((*x as u8, *y as u8))
             }
-        }
-        map.push(line_vec);
-    }
+        });
 
-    let score = trailheads.iter()
-        .map(|&t| get_destination_count(&map, t.0 as i16, t.1 as i16, None).map_or(0, |h| h.len()))
-        .sum::<usize>();
-    println!("Score: {}", score);
+        let score = trailheads.iter()
+            .map(|&t| get_destination_count(&map, t.0 as i16, t.1 as i16, None).map_or(0, |h| h.len()))
+            .sum::<usize>();
 
-    let rating = trailheads.iter()
-        .map(|&t| get_unique_trail_count(&map, t.0 as i16, t.1 as i16, None) as usize)
-        .sum::<usize>();
-    println!("Rating: {}", rating);
+        let rating = trailheads.iter()
+            .map(|&t| get_unique_trail_count(&map, t.0 as i16, t.1 as i16, None) as usize)
+            .sum::<usize>();
+
+        (score, rating)
+    });
 }

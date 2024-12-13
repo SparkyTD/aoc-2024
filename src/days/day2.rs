@@ -1,3 +1,5 @@
+use crate::test_set::TestSet;
+
 fn is_report_safe(report: &[u32]) -> bool {
     if report.len() == 0 {
         panic!("The report must contain at least one value");
@@ -43,23 +45,26 @@ fn is_report_safe_with_tolerance(report: &[u32]) -> bool {
 }
 
 pub fn day_2() {
-    let input = include_str!("../data/day2.txt");
+    let test_set = TestSet::from(include_str!("../../data/day2.test"));
+    test_set.test_all(|input| {
+        let mut safe_count = 0;
+        let mut tolerance_safe_count = 0;
+        for report_line in input.lines() {
+            if report_line.is_empty() {
+                continue;
+            }
+            let levels: Vec<u32> = report_line
+                .split_whitespace()
+                .map(|x| x.parse::<u32>().unwrap())
+                .collect();
 
-    let mut safe_count = 0;
-    let mut tolerance_safe_count = 0;
-    for report_line in input.lines() {
-        let levels: Vec<u32> = report_line
-            .split_whitespace()
-            .map(|x| x.parse::<u32>().unwrap())
-            .collect();
-
-        if is_report_safe(&levels) {
-            safe_count += 1
-        } else if is_report_safe_with_tolerance(&levels) {
-            tolerance_safe_count += 1
+            if is_report_safe(&levels) {
+                safe_count += 1
+            } else if is_report_safe_with_tolerance(&levels) {
+                tolerance_safe_count += 1
+            }
         }
-    }
 
-    println!("Safe count: {}", safe_count);
-    println!("Safe count (with tolerance): {}", safe_count + tolerance_safe_count);
+        (safe_count, safe_count + tolerance_safe_count)
+    });
 }

@@ -1,3 +1,5 @@
+use crate::test_set::TestSet;
+
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 enum Operator {
     Addition,
@@ -79,24 +81,26 @@ fn test_input(result: u64, components: &[u64], enable_concat: bool) -> bool {
 }
 
 pub fn day_7() {
-    let input = include_str!("../data/day7.txt");
+    let input = include_str!("../../data/day7.test");
 
-    let mut sum_part1 = 0;
-    let mut sum_part2 = 0;
-    for line in input.lines() {
-        let mut split = line.split(": ");
-        let result = split.next().and_then(|s| s.parse::<u64>().ok()).unwrap();
-        let components = split.next().unwrap().split(" ").map(|s| s.parse::<u64>().unwrap()).collect::<Vec<u64>>();
+    let test_set = TestSet::from(include_str!("../../data/day7.test"));
+    test_set.test_all(|input| {
+        let mut sum_part1 = 0;
+        let mut sum_part2 = 0;
+        for line in input.lines() {
+            let mut split = line.split(": ");
+            let result = split.next().and_then(|s| s.parse::<u64>().ok()).unwrap();
+            let components = split.next().unwrap().split(" ").map(|s| s.parse::<u64>().unwrap()).collect::<Vec<u64>>();
 
-        if test_input(result, &components, false) {
-            sum_part1 += result;
+            if test_input(result, &components, false) {
+                sum_part1 += result;
+            }
+
+            if test_input(result, &components, true) {
+                sum_part2 += result;
+            }
         }
 
-        if test_input(result, &components, true) {
-            sum_part2 += result;
-        }
-    }
-
-    println!("Sum (no concat): {}", sum_part1);
-    println!("Sum (with concat): {}", sum_part2);
+        (sum_part1, sum_part2)
+    });
 }

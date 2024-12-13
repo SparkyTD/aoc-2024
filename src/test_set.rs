@@ -1,3 +1,5 @@
+use std::fmt::Display;
+use std::time::Instant;
 use colored::Colorize;
 
 pub struct Test {
@@ -19,7 +21,7 @@ impl Test {
     }
 
     fn check_result(&self, result: &str, correct_result: Option<String>, label: &str) -> Option<bool> {
-        print!("{}: {} ", label.bold(), result.bright_blue());
+        print!("   {}: {} ", label.bold(), result.bright_blue());
         if let Some(correct_result) = correct_result {
             let matches = correct_result.eq(result);
             if matches {
@@ -53,10 +55,6 @@ impl TestSet {
 
         for line in raw_input.lines() {
             line_number += 1;
-
-            if line.is_empty() {
-                continue;
-            }
 
             if line.trim().to_lowercase().starts_with("@test") {
                 if let Some(current_test) = current_test.take() {
@@ -98,8 +96,6 @@ impl TestSet {
                 if let Some(mut current_test) = current_test.as_mut() {
                     current_test.input_text.push_str(line);
                     current_test.input_text.push_str("\n");
-                } else {
-                    panic!("Invalid data on line {}. Possible missing @test directive.", line_number);
                 }
             }
         }
@@ -108,10 +104,58 @@ impl TestSet {
             tests.push(current_test);
         }
 
+        tests.iter_mut().for_each(|test| {
+            test.input_text = test.input_text.trim().to_string();
+        });
+
         Self { tests }
     }
 
     pub fn get_test(&self, index: usize) -> &Test {
         &self.tests[index]
+    }
+
+    pub fn test_all<F, R>(&self, f: F)
+    where
+        F: Fn(String) -> (R, R),
+        R: Display,
+    {
+        let mut all_successful = true;
+        for i in 0..self.tests.len() {
+            all_successful &= self.test_one(i, &f);
+        }
+
+        println!();
+        if all_successful {
+            println!("All tests {}!", "succeeded".bright_green().bold());
+        } else {
+            println!("Some test have {}!", "failed".red().bold())
+        }
+    }
+
+    pub fn test_one<F, R>(&self, index: usize, f: F) -> bool
+    where
+        F: Fn(String) -> (R, R),
+        R: Display,
+    {
+        let test = self.get_test(index);
+        let start_time = Instant::now();
+        let (part1, part2) = f(test.get_input());
+        let elapsed = start_time.elapsed();
+
+        println!();
+        println!("{} Results:", test.name.bold());
+        let test1_result = test.check_result_1(part1.to_string().as_str());
+        let test2_result = test.check_result_2(part2.to_string().as_str());
+
+        let millis = elapsed.as_millis();
+        let time_result = if millis < 1000 {
+            format!("{}ms", millis)
+        } else {
+            format!("{}s {}ms", elapsed.as_secs(), millis % 1000)
+        };
+        println!("{}: {}", "Elapsed time".bold(), time_result.purple());
+
+        test1_result.unwrap_or(true) && test2_result.unwrap_or(true)
     }
 }
