@@ -16,6 +16,9 @@ use crate::days::day8::ResonantCollinearity;
 use crate::days::day9::DiskFragmenter;
 use crate::utils::aoc::AdventOfCode;
 
+#[allow(unused_imports)]
+use crate::utils::solution::SolveTest;
+
 mod utils;
 mod days;
 
@@ -36,6 +39,6 @@ fn main() {
     aoc.add_solution(13, Box::new(ClawContraption::default()));
     aoc.add_solution(14, Box::new(RestroomRedoubt::default()));
 
-    //aoc.solve_day(6, SolveTest::Index(1));
+    //aoc.solve_day(13, SolveTest::Last);
     aoc.solve_all();
 }

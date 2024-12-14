@@ -1,4 +1,5 @@
 use std::fmt::Display;
+use rayon::prelude::*;
 use crate::utils::solution::{solution, Solution};
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
@@ -86,21 +87,31 @@ pub struct BridgeRepair;
 
 impl Solution for BridgeRepair {
     fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
-        let mut sum_part1 = 0;
-        let mut sum_part2 = 0;
-        for line in input.lines() {
-            let mut split = line.split(": ");
-            let result = split.next().and_then(|s| s.parse::<u64>().ok()).unwrap();
-            let components = split.next().unwrap().split(" ").map(|s| s.parse::<u64>().unwrap()).collect::<Vec<u64>>();
+        let results = input.lines()
+            .collect::<Vec<&str>>()
+            .par_iter()
+            .map(|line| {
+                let mut split = line.split(": ");
+                let result = split.next().and_then(|s| s.parse::<u64>().ok()).unwrap();
+                let components = split.next().unwrap().split(" ").map(|s| s.parse::<u64>().unwrap()).collect::<Vec<u64>>();
 
-            if test_input(result, &components, false) {
-                sum_part1 += result;
-            }
+                let mut sum_part1 = 0;
+                let mut sum_part2 = 0;
 
-            if test_input(result, &components, true) {
-                sum_part2 += result;
-            }
-        }
+                if test_input(result, &components, false) {
+                    sum_part1 += result;
+                }
+
+                if test_input(result, &components, true) {
+                    sum_part2 += result;
+                }
+
+                (sum_part1, sum_part2)
+            })
+            .collect::<Vec<_>>();
+
+        let sum_part1 = results.iter().map(|p| p.0).sum::<u64>();
+        let sum_part2 = results.iter().map(|p| p.1).sum::<u64>();
 
         solution!(sum_part1, sum_part2)
     }
