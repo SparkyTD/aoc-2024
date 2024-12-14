@@ -15,7 +15,6 @@ use crate::days::day7::BridgeRepair;
 use crate::days::day8::ResonantCollinearity;
 use crate::days::day9::DiskFragmenter;
 use crate::utils::aoc::AdventOfCode;
-use crate::utils::solution::SolveTest;
 
 mod utils;
 mod days;

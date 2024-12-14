@@ -1,5 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
+use rayon::prelude::*;
 use crate::utils::matrix::Matrix;
 use crate::utils::solution::{solution, Solution};
 
@@ -172,27 +173,35 @@ impl Solution for GuardGallivant {
         }
 
         // Part 2
-        let mut possible_obstacle_count = 0;
-        let mut room_clone_2 = room.clone();
-        for (x, y) in room_clone.visited_tiles.keys() {
-            room_clone_2.obstacles.insert((*x, *y));
-            loop {
-                let state = process_room(&mut room_clone_2);
-                if state == RoomState::GuardPatrolling {
-                    continue;
+        let mut parallel_input = room_clone.visited_tiles
+            .keys()
+            .map(|&(x, y)| {
+                let mut room_clone = room.clone();
+                room_clone.obstacles.insert((x, y));
+
+                room_clone
+            }).collect::<Vec<_>>();
+        let parallel_output = parallel_input
+            .par_iter_mut()
+            .map(|room| {
+                let mut stuck_in_loop = false;
+                loop {
+                    let state = process_room(room);
+                    if state == RoomState::GuardPatrolling {
+                        continue;
+                    }
+
+                    if state == RoomState::GuardInLoop {
+                        stuck_in_loop = true;
+                    }
+
+                    break;
                 }
+                stuck_in_loop
+            })
+            .filter(|b| *b)
+            .count();
 
-                if state == RoomState::GuardInLoop {
-                    possible_obstacle_count += 1;
-                }
-
-                break;
-            }
-            room_clone_2.obstacles.remove(&(*x, *y));
-            room_clone_2.visited_tiles_and_facings.clear();
-            room_clone_2.guard = room.guard.clone();
-        }
-
-        solution!(room_clone.visited_tiles.len(), possible_obstacle_count)
+        solution!(room_clone.visited_tiles.len(), parallel_output)
     }
 }
