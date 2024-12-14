@@ -92,10 +92,9 @@ impl Display for Room {
 }
 
 fn process_room(room: &mut Room) -> RoomState {
-    if let Some(_) = room.visited_tiles_and_facings.get(&(room.guard.pos_x, room.guard.pos_y, room.guard.facing)) {
+    if !room.visited_tiles_and_facings.insert((room.guard.pos_x, room.guard.pos_y, room.guard.facing)) {
         return RoomState::GuardInLoop;
     }
-    room.visited_tiles_and_facings.insert((room.guard.pos_x, room.guard.pos_y, room.guard.facing));
     room.visited_tiles.insert((room.guard.pos_x, room.guard.pos_y), room.guard.facing);
 
     let guard_delta = room.guard.facing.get_delta();
