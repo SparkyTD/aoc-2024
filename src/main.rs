@@ -37,6 +37,6 @@ fn main() {
     aoc.add_solution(13, Box::new(ClawContraption::default()));
     aoc.add_solution(14, Box::new(RestroomRedoubt::default()));
 
-    aoc.solve_day(6, SolveTest::All);
-    //aoc.solve_all();
+    //aoc.solve_day(6, SolveTest::Index(1));
+    aoc.solve_all();
 }

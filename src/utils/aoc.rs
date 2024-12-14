@@ -48,10 +48,6 @@ impl AdventOfCode {
             .filter_map(|value| value.as_ref())
             .map(|result| result.elapsed)
             .max().unwrap_or(Duration::from_secs(0));
-        let longest_duration_label = results.values()
-            .filter_map(|value| value.as_ref())
-            .map(|result| format_elapsed(result.elapsed).chars().count())
-            .max().unwrap_or(0);
 
         if longest_duration.as_secs() < 5 {
             longest_duration *= 2;
@@ -76,7 +72,6 @@ impl AdventOfCode {
                 None => "",
                 Some(result) => &format_progress_bar(&result.elapsed, &longest_duration),
             };
-            let duration_padding = (0..longest_duration_label - duration_label.chars().count()).map(|_| " ").collect::<String>();
             println!("   Day {: >2}: {} {}  {}", format!("{}", day).purple().bold(), status_label, progress_label, duration_label);
         }
         PRINT_RESULTS.replace(prev_print_results);
