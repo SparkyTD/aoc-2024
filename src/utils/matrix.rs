@@ -17,7 +17,7 @@ where
         Self {
             width,
             height,
-            data: vec![vec![T::default(); height]; width],
+            data: vec![vec![T::default(); width]; height],
         }
     }
 
@@ -67,9 +67,9 @@ where
         }
     }
 
-    pub fn count(&self, f: T) -> usize
+    pub fn count<F>(&self, f: F) -> usize
     where
-        T: Fn(&T) -> bool,
+        F: Fn(&T) -> bool,
     {
         let mut count = 0;
         for y in 0..self.height {
@@ -131,6 +131,53 @@ where
         }
         if y < self.height - 1 {
             self.flood_eq_impl(x, y + 1, value, f, &mut visit_mat);
+        }
+    }
+
+    pub fn flood_where<F>(&self, x: usize, y: usize, mut f: F) -> Matrix<bool>
+    where
+        F: FnMut(&usize, &usize, &T) -> bool,
+    {
+        let mut visit_mat: Matrix<bool> = Matrix::new(self.width, self.height);
+        let val = self.get(x, y).unwrap();
+        self.flood_where_impl(x, y, val, &mut f, &mut visit_mat);
+
+        visit_mat
+    }
+
+    fn flood_where_impl<F>(&self, x: usize, y: usize, value: &T, f: &mut F, mut visit_mat: &mut Matrix<bool>)
+    where
+        F: FnMut(&usize, &usize, &T) -> bool,
+    {
+        if let Some(visited) = visit_mat.get(x, y) {
+            if *visited {
+                return;
+            }
+        } else {
+            return;
+        }
+
+        if *self.get(x, y).unwrap() != *value {
+            return;
+        }
+
+        let value = self.get(x, y).unwrap();
+        if !f(&x, &y, value) {
+            return;
+        }
+        visit_mat.set(x, y, true);
+
+        if x > 0 {
+            self.flood_where_impl(x - 1, y, value, f, &mut visit_mat);
+        }
+        if y > 0 {
+            self.flood_where_impl(x, y - 1, value, f, &mut visit_mat);
+        }
+        if x < self.width - 1 {
+            self.flood_where_impl(x + 1, y, value, f, &mut visit_mat);
+        }
+        if y < self.height - 1 {
+            self.flood_where_impl(x, y + 1, value, f, &mut visit_mat);
         }
     }
 

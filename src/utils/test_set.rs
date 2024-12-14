@@ -1,7 +1,10 @@
+use std::cell::Cell;
 use std::fmt::Display;
 use std::time::{Duration, Instant};
 use colored::Colorize;
 use crate::utils::aoc::format_elapsed;
+
+pub const PRINT_RESULTS: Cell<bool> = Cell::new(true);
 
 pub struct Test {
     name: String,
@@ -22,17 +25,23 @@ impl Test {
     }
 
     fn check_result(&self, result: &str, correct_result: Option<String>, label: &str) -> Option<bool> {
-        print!("   {}: {} ", label.bold(), result.bright_blue());
+        if PRINT_RESULTS.get() {
+            print!("   {}: {} ", label.bold(), result.bright_blue());
+        }
         if let Some(correct_result) = correct_result {
             let matches = correct_result.eq(result);
-            if matches {
-                println!("{}", "[Success]".bright_green().bold())
-            } else {
-                println!("{} (should be {})", "[Fail]".red().bold(), correct_result.yellow())
+            if PRINT_RESULTS.get() {
+                if matches {
+                    println!("{}", "[Success]".bright_green().bold())
+                } else {
+                    println!("{} (should be {})", "[Fail]".red().bold(), correct_result.yellow())
+                }
             }
             Some(matches)
         } else {
-            println!("{}", "[Unknown]".white());
+            if PRINT_RESULTS.get() {
+                println!("{}", "[Unknown]".white());
+            }
             None
         }
     }
@@ -157,11 +166,15 @@ impl TestSet {
         let (part1, part2) = f(test.get_input());
         let elapsed = start_time.elapsed();
 
-        println!();
-        println!("{} Results:", test.name.bold());
+        if PRINT_RESULTS.get() {
+            println!();
+            println!("{} Results:", test.name.bold());
+        }
         let test1_result = test.check_result_1(part1.to_string().as_str());
         let test2_result = test.check_result_2(part2.to_string().as_str());
-        println!("{}: {}", "Elapsed time".bold(), format_elapsed(elapsed).purple());
+        if PRINT_RESULTS.get() {
+            println!("{}: {}", "Elapsed time".bold(), format_elapsed(elapsed).purple());
+        }
 
         TestRunResult {
             part1_success: test1_result,

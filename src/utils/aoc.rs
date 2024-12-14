@@ -1,8 +1,9 @@
 use std::collections::HashMap;
 use std::time::Duration;
 use colored::Colorize;
+use terminal_size::Width;
 use crate::utils::solution::{Solution, SolveTest};
-use crate::utils::test_set::TestRunResult;
+use crate::utils::test_set::{TestRunResult, PRINT_RESULTS};
 
 #[derive(Default)]
 pub struct AdventOfCode {
@@ -27,6 +28,8 @@ impl AdventOfCode {
 
     #[allow(dead_code)]
     pub fn solve_all(&self) {
+        let prev_print_results = PRINT_RESULTS.get();
+        PRINT_RESULTS.replace(false);
         let mut keys = self.solutions.keys().collect::<Vec<&u8>>();
         keys.sort();
 
@@ -40,6 +43,19 @@ impl AdventOfCode {
         }
 
         println!();
+
+        let mut longest_duration = results.values()
+            .filter_map(|value| value.as_ref())
+            .map(|result| result.elapsed)
+            .max().unwrap_or(Duration::from_secs(0));
+        let longest_duration_label = results.values()
+            .filter_map(|value| value.as_ref())
+            .map(|result| format_elapsed(result.elapsed).chars().count())
+            .max().unwrap_or(0);
+
+        if longest_duration.as_secs() < 5 {
+            longest_duration *= 2;
+        }
 
         println!("All solutions have been executed, here are the results:");
         for day in &keys {
@@ -56,19 +72,43 @@ impl AdventOfCode {
                 None => "",
                 Some(result) => &format_elapsed(result.elapsed),
             };
-            println!("   Day {: >2}: {} ({})", format!("{}", day).purple().bold(), status_label, duration_label);
+            let progress_label = match result {
+                None => "",
+                Some(result) => &format_progress_bar(&result.elapsed, &longest_duration),
+            };
+            let duration_padding = (0..longest_duration_label - duration_label.chars().count()).map(|_| " ").collect::<String>();
+            println!("   Day {: >2}: {} {}  {}", format!("{}", day).purple().bold(), status_label, progress_label, duration_label);
         }
+        PRINT_RESULTS.replace(prev_print_results);
     }
+}
+
+fn format_progress_bar(current_duration: &Duration, max_duration: &Duration) -> String {
+    let terminal_width = terminal_size::terminal_size()
+        .and_then(|(Width(w), terminal_size::Height(_))| Some(w as usize))
+        .unwrap_or(120);
+
+    let bar_width = terminal_width / 4;
+    let progress = current_duration.as_secs_f64() / max_duration.as_secs_f64();
+    let filled_width = (progress * bar_width as f64).round() as usize;
+
+    let filled_bar = "=".repeat(filled_width);
+    let empty_bar = " ".repeat(bar_width.saturating_sub(filled_width));
+
+    format!("[{}{}{}{}]", "=".purple(), filled_bar.purple(), ">".bright_purple(), empty_bar)
 }
 
 pub fn format_elapsed(duration: Duration) -> String {
     let millis = duration.as_millis();
     let micros = duration.as_micros();
+    let seconds = duration.as_secs();
     if micros < 1000 {
-        format!("{}µs", micros)
+        format!("{}µs", micros).bright_cyan().to_string()
     } else if millis < 1000 {
-        format!("{}ms", millis)
+        format!("{}ms", millis).bright_green().to_string()
+    } else if seconds <= 5 {
+        format!("{}s {}ms", duration.as_secs(), millis % 1000).yellow().bold().to_string()
     } else {
-        format!("{}s {}ms", duration.as_secs(), millis % 1000)
+        format!("{}s {}ms", duration.as_secs(), millis % 1000).red().bold().to_string()
     }
 }

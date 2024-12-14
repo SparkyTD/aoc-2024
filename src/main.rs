@@ -4,6 +4,7 @@ use crate::days::day10::HoofIt;
 use crate::days::day11::PlutonianPebbles;
 use crate::days::day12::GardenGroups;
 use crate::days::day13::ClawContraption;
+use crate::days::day14::RestroomRedoubt;
 use crate::days::day1::HistorianHysteria;
 use crate::days::day2::RedNosedReports;
 use crate::days::day3::MullItOver;
@@ -14,6 +15,7 @@ use crate::days::day7::BridgeRepair;
 use crate::days::day8::ResonantCollinearity;
 use crate::days::day9::DiskFragmenter;
 use crate::utils::aoc::AdventOfCode;
+use crate::utils::solution::SolveTest;
 
 mod utils;
 mod days;
@@ -33,7 +35,8 @@ fn main() {
     aoc.add_solution(11, Box::new(PlutonianPebbles::default()));
     aoc.add_solution(12, Box::new(GardenGroups::default()));
     aoc.add_solution(13, Box::new(ClawContraption::default()));
+    aoc.add_solution(14, Box::new(RestroomRedoubt::default()));
 
-    // aoc.solve_day(13, SolveTest::All);
-    aoc.solve_all();
+    aoc.solve_day(6, SolveTest::All);
+    //aoc.solve_all();
 }

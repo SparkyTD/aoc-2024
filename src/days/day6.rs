@@ -173,11 +173,11 @@ impl Solution for GuardGallivant {
 
         // Part 2
         let mut possible_obstacle_count = 0;
+        let mut room_clone_2 = room.clone();
         for (x, y) in room_clone.visited_tiles.keys() {
-            let mut room_clone = room.clone();
-            room_clone.obstacles.insert((*x, *y));
+            room_clone_2.obstacles.insert((*x, *y));
             loop {
-                let state = process_room(&mut room_clone);
+                let state = process_room(&mut room_clone_2);
                 if state == RoomState::GuardPatrolling {
                     continue;
                 }
@@ -188,6 +188,9 @@ impl Solution for GuardGallivant {
 
                 break;
             }
+            room_clone_2.obstacles.remove(&(*x, *y));
+            room_clone_2.visited_tiles_and_facings.clear();
+            room_clone_2.guard = room.guard.clone();
         }
 
         solution!(room_clone.visited_tiles.len(), possible_obstacle_count)
