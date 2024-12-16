@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::time::Duration;
+use chrono::Datelike;
 use colored::Colorize;
 use terminal_size::Width;
 use crate::utils::solution::{Solution, SolveTest};
@@ -75,6 +76,27 @@ impl AdventOfCode {
             println!("   Day {: >2}: {} {}  {}", format!("{}", day).purple().bold(), status_label, progress_label, duration_label);
         }
         PRINT_RESULTS.replace(prev_print_results);
+
+        self.check_date_and_print_link();
+    }
+
+    fn check_date_and_print_link(&self) {
+        let local_date = chrono::Utc::now() - chrono::Duration::hours(7);
+        if local_date.month() != 12 {
+            return;
+        }
+
+        let mut keys = self.solutions.keys().collect::<Vec<&u8>>();
+        keys.sort();
+
+        let last_day_with_solution = **keys.last().unwrap() as u32;
+
+        if local_date.day() > last_day_with_solution && last_day_with_solution < 25 {
+            let next_day = last_day_with_solution + 1;
+            let problem_url = format!("https://adventofcode.com/{}/day/{}", local_date.year(), next_day);
+            println!();
+            println!("{}: {}", "Your next AoC problem is ready! Grab it here".purple().bold().italic(), problem_url);
+        }
     }
 }
 

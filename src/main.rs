@@ -5,6 +5,7 @@ use crate::days::day11::PlutonianPebbles;
 use crate::days::day12::GardenGroups;
 use crate::days::day13::ClawContraption;
 use crate::days::day14::RestroomRedoubt;
+use crate::days::day15::WarehouseWoes;
 use crate::days::day1::HistorianHysteria;
 use crate::days::day2::RedNosedReports;
 use crate::days::day3::MullItOver;
@@ -38,7 +39,8 @@ fn main() {
     aoc.add_solution(12, Box::new(GardenGroups::default()));
     aoc.add_solution(13, Box::new(ClawContraption::default()));
     aoc.add_solution(14, Box::new(RestroomRedoubt::default()));
+    aoc.add_solution(15, Box::new(WarehouseWoes::default()));
 
-    //aoc.solve_day(6, SolveTest::Last);
+    //aoc.solve_day(15, SolveTest::All);
     aoc.solve_all();
 }

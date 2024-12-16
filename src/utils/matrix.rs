@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt::{Debug, Display, Formatter};
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct Matrix<T> {
     width: usize,
     height: usize,
@@ -21,34 +21,6 @@ where
         }
     }
 
-    pub fn new_fill(width: usize, height: usize, fill: T) -> Self {
-        Self {
-            width,
-            height,
-            data: vec![vec![fill; height]; width],
-        }
-    }
-
-    pub fn get(&self, x: usize, y: usize) -> Option<&T> {
-        self.data.get(y).and_then(|row| row.get(x))
-    }
-
-    pub fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut T> {
-        self.data.get_mut(y).and_then(|row| row.get_mut(x))
-    }
-
-    pub fn set(&mut self, x: usize, y: usize, value: T) {
-        self.data[y][x] = value;
-    }
-
-    pub fn width(&self) -> usize {
-        self.width
-    }
-
-    pub fn height(&self) -> usize {
-        self.height
-    }
-
     pub fn map<T2>(&self, f: impl Fn(&T) -> T2) -> Matrix<T2> {
         let mut rows: Vec<Vec<T2>> = Vec::new();
         for y in 0..self.height {
@@ -56,6 +28,24 @@ where
             for x in 0..self.width {
                 let val = self.get(x, y).unwrap();
                 columns.push(f(val));
+            }
+            rows.push(columns);
+        }
+
+        Matrix {
+            width: rows[0].len(),
+            height: rows.len(),
+            data: rows,
+        }
+    }
+
+    pub fn map_xy<T2>(&self, mut f: impl FnMut(&T, usize, usize) -> T2) -> Matrix<T2> {
+        let mut rows: Vec<Vec<T2>> = Vec::new();
+        for y in 0..self.height {
+            let mut columns: Vec<T2> = Vec::new();
+            for x in 0..self.width {
+                let val = self.get(x, y).unwrap();
+                columns.push(f(val, x, y));
             }
             rows.push(columns);
         }
@@ -82,6 +72,41 @@ where
         }
 
         count
+    }
+}
+
+impl<T> Matrix<T> {
+    pub fn width(&self) -> usize {
+        self.width
+    }
+
+    pub fn height(&self) -> usize {
+        self.height
+    }
+
+    pub fn get(&self, x: usize, y: usize) -> Option<&T> {
+        self.data.get(y).and_then(|row| row.get(x))
+    }
+
+    pub fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut T> {
+        self.data.get_mut(y).and_then(|row| row.get_mut(x))
+    }
+
+    pub fn set(&mut self, x: usize, y: usize, value: T) {
+        self.data[y][x] = value;
+    }
+}
+
+impl<T> Matrix<T>
+where
+    T: Clone,
+{
+    pub fn new_fill(width: usize, height: usize, fill: T) -> Self {
+        Self {
+            width,
+            height,
+            data: vec![vec![fill; width]; height],
+        }
     }
 }
 
