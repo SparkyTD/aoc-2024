@@ -173,7 +173,7 @@ impl TestSet {
         let test1_result = test.check_result_1(part1.to_string().as_str());
         let test2_result = test.check_result_2(part2.to_string().as_str());
         if PRINT_RESULTS.get() {
-            println!("{}: {}", "Elapsed time".bold(), format_elapsed(elapsed).purple());
+            println!("{}: {}", "Elapsed time".bold(), format_elapsed(elapsed, true).purple());
         }
 
         TestRunResult {
