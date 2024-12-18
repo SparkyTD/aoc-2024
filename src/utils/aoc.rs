@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::sync::atomic::Ordering::Relaxed;
 use std::time::Duration;
 use chrono::Datelike;
 use colored::Colorize;
@@ -28,9 +29,38 @@ impl AdventOfCode {
     }
 
     #[allow(dead_code)]
+    pub fn bench_day(&self, day: u8, solve_test: SolveTest) {
+        if let Some(solution) = self.solutions.get(&day) {
+            PRINT_RESULTS.store(false, Relaxed);
+
+            let iterations = 100;
+            let mut total_time = 0;
+
+            for _ in 0..iterations {
+                match solution.solve_test(day, solve_test) {
+                    Some(result) => {
+                        total_time += result.elapsed.as_micros();
+                    }
+                    None => {
+                        println!("{}", "The program did not return a solution, aborting benchmark!".red().bold());
+                        return;
+                    }
+                }
+            }
+
+            let duration = Duration::from_micros((total_time / iterations) as u64);
+            println!("Average execution time: {}", format_elapsed(duration, true));
+
+            PRINT_RESULTS.store(true, Relaxed);
+        } else {
+            panic!("No solution exists for day {day}!");
+        }
+    }
+
+    #[allow(dead_code)]
     pub fn solve_all(&self) {
-        let prev_print_results = PRINT_RESULTS.get();
-        PRINT_RESULTS.replace(false);
+        let prev_print_results = PRINT_RESULTS.load(Relaxed);
+        PRINT_RESULTS.store(false, Relaxed);
         let mut keys = self.solutions.keys().collect::<Vec<&u8>>();
         keys.sort();
 
@@ -68,7 +98,7 @@ impl AdventOfCode {
             };
             println!("   Day {: >2}: {} {}  {}", format!("{}", day).purple().bold(), status_label, progress_label, duration_label);
         }
-        PRINT_RESULTS.replace(prev_print_results);
+        PRINT_RESULTS.store(prev_print_results, Relaxed);
 
         self.check_date_and_print_link();
         Self::write_progress_report(results);
@@ -214,7 +244,8 @@ impl AdventOfCode {
 fn format_progress_bar(current_duration: &Duration, max_duration: &Duration, colorize: bool) -> String {
     let terminal_width = terminal_size::terminal_size()
         .and_then(|(Width(w), terminal_size::Height(_))| Some(w as usize))
-        .unwrap_or(120);
+        .unwrap_or(200)
+        .min(200);
 
     let bar_width = terminal_width / 4;
     let progress = current_duration.as_secs_f64() / max_duration.as_secs_f64();

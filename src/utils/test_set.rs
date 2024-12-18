@@ -1,10 +1,11 @@
-use std::cell::Cell;
 use std::fmt::Display;
+use std::sync::atomic::AtomicBool;
+use std::sync::atomic::Ordering::Relaxed;
 use std::time::{Duration, Instant};
 use colored::Colorize;
 use crate::utils::aoc::format_elapsed;
 
-pub const PRINT_RESULTS: Cell<bool> = Cell::new(true);
+pub static PRINT_RESULTS: AtomicBool = AtomicBool::new(true);
 
 pub struct Test {
     name: String,
@@ -25,12 +26,12 @@ impl Test {
     }
 
     fn check_result(&self, result: &str, correct_result: Option<String>, label: &str) -> Option<bool> {
-        if PRINT_RESULTS.get() {
+        if PRINT_RESULTS.load(Relaxed) {
             print!("   {}: {} ", label.bold(), result.bright_blue());
         }
         if let Some(correct_result) = correct_result {
             let matches = correct_result.eq(result);
-            if PRINT_RESULTS.get() {
+            if PRINT_RESULTS.load(Relaxed) {
                 if matches {
                     println!("{}", "[Success]".bright_green().bold())
                 } else {
@@ -39,7 +40,7 @@ impl Test {
             }
             Some(matches)
         } else {
-            if PRINT_RESULTS.get() {
+            if PRINT_RESULTS.load(Relaxed) {
                 println!("{}", "[Unknown]".white());
             }
             None
@@ -166,13 +167,13 @@ impl TestSet {
         let (part1, part2) = f(test.get_input());
         let elapsed = start_time.elapsed();
 
-        if PRINT_RESULTS.get() {
+        if PRINT_RESULTS.load(Relaxed) {
             println!();
             println!("{} Results:", test.name.bold());
         }
         let test1_result = test.check_result_1(part1.to_string().as_str());
         let test2_result = test.check_result_2(part2.to_string().as_str());
-        if PRINT_RESULTS.get() {
+        if PRINT_RESULTS.load(Relaxed) {
             println!("{}: {}", "Elapsed time".bold(), format_elapsed(elapsed, true).purple());
         }
 

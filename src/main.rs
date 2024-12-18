@@ -47,6 +47,6 @@ fn main() {
     aoc.add_solution(17, Box::new(ChronospatialComputer::default()));
     aoc.add_solution(18, Box::new(RAMRun::default()));
 
-    //aoc.solve_day(18, SolveTest::Index(1));
+    //aoc.solve_day(6, SolveTest::Last);
     aoc.solve_all();
 }

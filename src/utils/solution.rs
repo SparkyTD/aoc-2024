@@ -1,6 +1,7 @@
 use std::fmt::Display;
 use crate::utils::test_set::{TestRunResult, TestSet};
 
+#[derive(Debug, Copy, Clone)]
 #[allow(dead_code)]
 pub enum SolveTest {
     All,

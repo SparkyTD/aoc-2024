@@ -198,7 +198,6 @@ impl Solution for ReindeerMaze {
         let mut shortcuts = HashSet::new();
         let mut shortcut_count = 0;
         find_all_unique_tiles(&mut cost_matrix, &maze.end, &mut unique_tiles, None, &mut shortcuts, &mut shortcut_count);
-        println!("{}", shortcuts.len());
         solution!(lowest_cost, unique_tiles.len() - shortcut_count)
     }
 }
