@@ -51,19 +51,30 @@ This project uses a custom test file format that allows multiple different test 
 Each test is prefixed with `@test`, which is followed by the program input. To perform result checking,
 the `@test` tag can be extended with `@part1 <PART1_RESULT>` and/or `@part2 <PART1_RESULT>`.
 
-Here's an example test file (`day26.test`)
+Here's an example test file (`./data/day17.test`)
 ```
 @test
-@part1 1234
-some-multiline
-program-input
+@part1 4,6,3,5,6,3,5,2,1,0
+Register A: 729
+Register B: 0
+Register C: 0
+
+Program: 0,1,5,4,3,0
 
 @test
-@part2 esrever
-rev(reverse)
+@part2 117440
+Register A: 2024
+Register B: 0
+Register C: 0
+
+Program: 0,3,5,4,3,0
 
 @test
-@part1 12
-@part3 34
-split 1234
+@part1 [Redacted]
+@part2 [Redacted]
+Register A: [Redacted]
+Register B: 0
+Register C: 0
+
+Program: [Redacted]
 ```
