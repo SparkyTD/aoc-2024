@@ -1,7 +1,4 @@
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::Write;
-use std::ops::Add;
 use std::time::Duration;
 use chrono::Datelike;
 use colored::Colorize;
@@ -97,6 +94,9 @@ impl AdventOfCode {
     }
 
     fn write_progress_report(results: HashMap<u8, Option<TestRunResult>>) {
+        if cfg!(debug_assertions) {
+            return;
+        }
         let readme_file_name = "README.md";
         let mut git_root = std::env::current_dir().unwrap();
         while !git_root.join(readme_file_name).exists() {
@@ -114,13 +114,12 @@ impl AdventOfCode {
         let readme_lines = readme_content.split('\n').collect::<Vec<_>>();
 
         let mut should_rewrite_readme = false;
-        // let mut readme_writer = File::create(git_root.join(readme_file_name)).unwrap();
         let mut lines = Vec::new();
-        let mut longest_duration = Self::get_longest_duration(&results);
+        let longest_duration = Self::get_longest_duration(&results);
 
         let mut reading_table = false;
         let mut table_written = false;
-        for mut line in readme_lines {
+        for line in readme_lines {
             if line.contains("{RESULTS_START}") {
                 reading_table = true;
                 lines.push(line.to_string());
@@ -166,7 +165,7 @@ impl AdventOfCode {
                             let max_micros = longest_duration.as_micros();
                             let result_micros = result.elapsed.as_micros();
                             let percentage = 100 * result_micros / max_micros;
-                            format!("![Static Badge](https://progress-bar.xyz/{}/?width=400&progress_color=8935D9&progress_background=404040&show_text=false)", percentage)
+                            format!("![Static Badge](https://progress-bar.xyz/{}/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)", percentage)
                         } else {
                             "".to_string()
                         }

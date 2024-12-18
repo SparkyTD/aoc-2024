@@ -26,6 +26,7 @@ struct Program {
 }
 
 impl Program {
+    #[allow(dead_code)]
     fn compile(&self) -> Vec<u8> {
         let mut vec = Vec::new();
 
@@ -45,6 +46,7 @@ impl Program {
         vec
     }
 
+    #[allow(dead_code)]
     fn decode_with_operand(instruction: u8, operand: &Operand) -> [u8; 2] {
         match operand {
             Operand::Combo(value) => [instruction, *value],
