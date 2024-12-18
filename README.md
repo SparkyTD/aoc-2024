@@ -1,4 +1,6 @@
 # ❄️ Advent of Code 2024 ❄️
+This is my first year participating in Advent of Code. I love a good challenge, and this event most certainly seems like one! 
+It is also part of my Rust learning journey, as I did not have a lot of experience with the language before starting this challenge.
 
 ## My solutions so far:
 <!-- {RESULTS_START} -->
@@ -41,6 +43,7 @@
 <!-- {DAY 17=55} -->
 <!-- {DAY 18=14299} -->
 <!-- {RESULTS_END} -->
+*The table above is automatically generated with each execution of the test suite.*
 
 ## Test Inputs
 To respect the rules of Advent of Code, as well as the event's creator, my personalized inputs are not included in this repository.
