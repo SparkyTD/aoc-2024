@@ -170,7 +170,7 @@ impl AdventOfCode {
                             "".to_string()
                         }
                     };
-                    let day_label = format!("[Day {}](src/days/day{}.rs)", day, day);
+                    let day_label = format!("[{}](src/days/day{}.rs)", day, day);
                     lines.push(format_args!("|{}|{}|{}|{}|\n", day_label, status_badge, progress_label, duration_label.clear()).to_string());
                 }
 
