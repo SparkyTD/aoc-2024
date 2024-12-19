@@ -62,6 +62,8 @@ fn try_find_x_mas(matrix: &Matrix<char>, x: u32, y: u32) -> bool {
     }
 }
 
+/// <b>Part 1:</b> Count the occurrences of "XMAS" in a crossword puzzle
+/// <br/><br/><b>Part 2:</b> Count the occurrences of X shaped "MAS" patterns
 #[derive(Default)]
 pub struct CeresSearch;
 

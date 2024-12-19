@@ -67,6 +67,8 @@ fn get_unique_trail_count(map: &Matrix<u8>, start_x: i16, start_y: i16, prev_val
     up + down + left + right
 }
 
+/// <b>Part 1:</b> Count the sum of all valid trailhead scores on a topographic map
+/// <br/><br/><b>Part 2:</b> Count the sum of each valid trailhead's rating
 #[derive(Default)]
 pub struct HoofIt;
 

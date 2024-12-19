@@ -9,6 +9,8 @@ enum Orientation {
     Vertical,
 }
 
+/// <b>Part 1:</b> Calculate the total price of fencing all regions on the map
+/// <br/><br/><b>Part 2:</b> Calculate the total fence price accounting for bulk discount
 #[derive(Debug, Eq, PartialEq, Hash, Copy, Clone)]
 struct Edge {
     start: (usize, usize),

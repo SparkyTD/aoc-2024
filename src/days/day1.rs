@@ -73,6 +73,8 @@ impl Node {
     }
 }
 
+/// <b>Part 1:</b> Find the total distance between pairs of items in two sorted lists.
+/// <br/><br/><b>Part 2:</b> Calculate the similarity score by adding up the occurrences of each number from the first in the second list.
 #[derive(Default)]
 pub struct HistorianHysteria;
 

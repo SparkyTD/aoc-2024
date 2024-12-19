@@ -88,6 +88,8 @@ impl Area {
     }
 }
 
+/// <b>Part 1:</b> Simulate 1024 falling bytes in a 2D grid, find the shortest path to exit
+/// <br/><br/><b>Part 2:</b> Find the number of fallen bytes before the exit becomes unreachable
 #[derive(Default)]
 pub struct RAMRun;
 

@@ -39,6 +39,8 @@ impl Debug for Area {
     }
 }
 
+/// <b>Part 1:</b> Calculate the checksum of a disk after compacting all data sections
+/// <br/><br/><b>Part 2:</b> Calculate the checksum after defragmenting the filesystem
 #[derive(Default)]
 pub struct DiskFragmenter;
 

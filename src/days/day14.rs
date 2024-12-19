@@ -18,6 +18,8 @@ fn modulo(x: i32, m: i32) -> i32 {
     (x % m + m) % m
 }
 
+/// <b>Part 1:</b> Calculate the safety factor of robots moving on a 2D grid after 100 seconds
+/// <br/><br/><b>Part 2:</b> Count the fewest number of seconds before robots display an Easter egg
 #[derive(Default)]
 pub struct RestroomRedoubt;
 

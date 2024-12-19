@@ -243,6 +243,8 @@ fn find_solution(cpu: &mut Cpu, test_output: &[u8], value: u64) -> Option<u64> {
     None
 }
 
+/// <b>Part 1:</b> Simulate a program on a virtual CPU to get the output
+/// <br/><br/><b>Part 2:</b> Find the correct value for register A that results in the program outputting itself
 #[derive(Default)]
 pub struct ChronospatialComputer;
 

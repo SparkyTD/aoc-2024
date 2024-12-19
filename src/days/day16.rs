@@ -170,6 +170,8 @@ fn find_all_unique_tiles(cost_matrix: &mut Matrix<i64>, position: &Position, uni
     }
 }
 
+/// <b>Part 1:</b> Find the cheapest solution to the maze, accounting for the number of turns
+/// <br/><br/><b>Part 2:</b> Count the number of unique tiles that are part of the best solutions to a maze
 #[derive(Default)]
 pub struct ReindeerMaze;
 

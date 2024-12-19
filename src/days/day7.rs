@@ -82,6 +82,8 @@ fn test_input(result: u64, components: &[u64], enable_concat: bool) -> bool {
     false
 }
 
+/// <b>Part 1:</b> Find the equations that can be solved with a sequence of (+) and (-) operations, sum them up
+/// <br/><br/><b>Part 2:</b> Syn up every solvable equations with the additional concatenation operation
 #[derive(Default)]
 pub struct BridgeRepair;
 

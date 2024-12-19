@@ -33,6 +33,8 @@ fn count_arrangements(string: &str, index: usize, prefix_tree: &PrefixTree, arra
     arrangement_count
 }
 
+/// <b>Part 1:</b> Count the number of color sequences that can be arranged using the specified striped towels
+/// <br/><br/><b>Part 2:</b> Sum up every possible towel arrangement for evey color sequence
 #[derive(Default)]
 pub struct LinenLayout;
 

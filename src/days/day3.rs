@@ -43,6 +43,8 @@ fn next_state(last_state: ParserState, input: char) -> ParserState {
     }
 }
 
+/// <b>Part 1:</b> Evaluate the sum of all mul() instructions from the corrupted code
+/// <br/><br/><b>Part 2:</b> Also evaluate do() and don't() instructions
 #[derive(Default)]
 pub struct MullItOver;
 

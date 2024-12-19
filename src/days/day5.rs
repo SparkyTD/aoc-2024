@@ -28,6 +28,8 @@ fn fix_page_order(ordering_rules: &HashMap<u8, HashSet<u8>>, pages: &mut Vec<u8>
     false
 }
 
+/// <b>Part 1:</b> Sum up the middle page numbers from every correctly-ordered update
+/// <br/><br/><b>Part 2:</b> Fix incorrectly ordered updates, add up the middle page numbers
 #[derive(Default)]
 pub struct PrintQueue;
 

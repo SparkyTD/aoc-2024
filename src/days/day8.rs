@@ -3,6 +3,8 @@ use std::fmt::Display;
 use crate::utils::matrix::Matrix;
 use crate::utils::solution::{solution, Solution};
 
+/// <b>Part 1:</b> Count the number of antinodes caused by the antennas
+/// <br/><br/><b>Part 2:</b> Count the number of extended antinodes
 #[derive(Default)]
 pub struct ResonantCollinearity;
 

@@ -12,6 +12,8 @@ fn solve_linear_eq(a1: i64, b1: i64, c1: i64, a2: i64, b2: i64, c2: i64) -> (i64
     (x, y)
 }
 
+/// <b>Part 1:</b> Count the number of tokens required to win all claw machine prizes
+/// <br/><br/><b>Part 2:</b> Compute the same data, but with an offset of 1e13
 #[derive(Default)]
 pub struct ClawContraption;
 

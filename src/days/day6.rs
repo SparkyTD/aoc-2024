@@ -126,6 +126,8 @@ fn process_room(room: &mut Room) -> RoomState {
     }
 }
 
+/// <b>Part 1:</b> Count how many paths are visited by the guard before they exit
+/// <br/><br/><b>Part 2:</b> Count how many additional obstacles can be added to trap the guard in a loop
 #[derive(Default)]
 pub struct GuardGallivant;
 

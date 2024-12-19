@@ -174,6 +174,8 @@ fn simulate_robot_step_wide(warehouse: &mut Warehouse, direction: &Direction) {
     }
 }
 
+/// <b>Part 1:</b> Simulate a robot moving boxes in a room
+/// <br/><br/><b>Part 2:</b> Simulate the same room, with double-wide boxes
 #[derive(Default)]
 pub struct WarehouseWoes;
 

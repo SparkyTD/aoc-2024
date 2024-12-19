@@ -81,6 +81,8 @@ fn blink(old_config: StoneConfiguration) -> StoneConfiguration {
     new_config
 }
 
+/// <b>Part 1:</b> Simulate numbered stone rearrangements 50 times
+/// <br/><br/><b>Part 2:</b> Simulate the same rearrangements 75 times
 #[derive(Default)]
 pub struct PlutonianPebbles;
 

@@ -45,6 +45,8 @@ fn is_report_safe_with_tolerance(report: &[u32]) -> bool {
     false
 }
 
+/// <b>Part 1:</b> Count the number of safe reports that are in only increasing/decreasing order
+/// <br/><br/><b>Part 2:</b> Count how many reports can be made safe by removing an element
 #[derive(Default)]
 pub struct RedNosedReports;
 
