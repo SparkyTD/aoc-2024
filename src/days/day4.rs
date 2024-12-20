@@ -81,6 +81,6 @@ impl Solution for CeresSearch {
             }
         });
 
-        solution!(total_cross, total)
+        solution!(total, total_cross)
     }
 }
