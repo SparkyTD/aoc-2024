@@ -11,6 +11,7 @@ use crate::days::day17::ChronospatialComputer;
 use crate::days::day18::RAMRun;
 use crate::days::day19::LinenLayout;
 use crate::days::day1::HistorianHysteria;
+use crate::days::day20::RaceCondition;
 use crate::days::day2::RedNosedReports;
 use crate::days::day3::MullItOver;
 use crate::days::day4::CeresSearch;
@@ -48,7 +49,8 @@ fn main() {
     aoc.add_solution(17, Box::new(ChronospatialComputer::default()));
     aoc.add_solution(18, Box::new(RAMRun::default()));
     aoc.add_solution(19, Box::new(LinenLayout::default()));
+    aoc.add_solution(20, Box::new(RaceCondition::default()));
 
-    aoc.solve_day(16, SolveTest::Last);
-    //aoc.solve_all();
+    //aoc.solve_day(20, SolveTest::Index(1));
+    aoc.solve_all();
 }

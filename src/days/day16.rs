@@ -1,8 +1,9 @@
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap, HashSet};
 use std::fmt::{Display};
-use std::hash::{Hash};
+use crate::utils::facing::Facing;
 use crate::utils::matrix::Matrix;
+use crate::utils::position::Position;
 use crate::utils::solution::{solution, Solution};
 
 #[derive(Default)]
@@ -15,49 +16,6 @@ struct Maze {
 impl Maze {
     pub fn is_wall(&self, x: usize, y: usize) -> bool {
         *self.map.get(x, y).unwrap_or(&false)
-    }
-}
-
-#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
-enum Facing {
-    East,
-    South,
-    West,
-    North,
-}
-
-impl Facing {
-    pub fn apply(&self, position: &Position) -> Position {
-        match self {
-            Facing::East => Position { x: position.x + 1, y: position.y },
-            Facing::West => Position { x: position.x - 1, y: position.y },
-            Facing::South => Position { x: position.x, y: position.y + 1 },
-            Facing::North => Position { x: position.x, y: position.y - 1 },
-        }
-    }
-
-    fn turn_cost(&self, other: &Facing) -> usize {
-        if self == other { 0 } else { 1000 }
-    }
-
-    pub fn all() -> Vec<Facing> {
-        vec![Facing::North, Facing::East, Facing::South, Facing::West]
-    }
-
-    pub fn adjacents(&self) -> Vec<Facing> {
-        Facing::all()
-            .into_iter()
-            .filter(|f| *f != *self)
-            .collect::<Vec<Facing>>()
-    }
-
-    pub fn opposite(&self) -> Facing {
-        match self {
-            Facing::East => Facing::West,
-            Facing::South => Facing::North,
-            Facing::West => Facing::East,
-            Facing::North => Facing::South,
-        }
     }
 }
 
@@ -80,10 +38,8 @@ impl PartialOrd for State {
     }
 }
 
-#[derive(Debug, Default, Copy, Clone, Eq, PartialEq, Hash)]
-struct Position {
-    x: usize,
-    y: usize,
+fn turn_cost(facing: &Facing, other: &Facing) -> usize {
+    if *facing == *other { 0 } else { 1000 }
 }
 
 fn dijkstra(maze: &Maze, cost_matrix: &mut Matrix<i64>, init_facing: Facing) -> HashMap<(Position, Facing), usize> {
@@ -122,7 +78,7 @@ fn dijkstra(maze: &Maze, cost_matrix: &mut Matrix<i64>, init_facing: Facing) -> 
         // Check the next tile in all four directions except the opposite of the current
         for next_facing in current.facing.opposite().adjacents() {
             // Calculate the turn cost. If current.facing == next_facing then 1000, otherwise 0
-            let turn_cost = next_facing.turn_cost(&current.facing);
+            let turn_cost = turn_cost(&next_facing, &current.facing);
 
             // Get the next position, skip if it's a wall
             let next_position = next_facing.apply(&current.position);
