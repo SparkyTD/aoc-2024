@@ -49,7 +49,20 @@ It is also part of my Rust learning journey, as I did not have a lot of experien
 <!-- {RESULTS_END} -->
 *The table above is automatically generated with each execution of the test suite.*
 
-## Test Inputs
+**NOTE:** Every solution has been validated against **two separate inputs** from two different [adventofcode.com](https://adventofcode.com) accounts.
+A `Success` badge next to a day means that the solution produced the correct results for both **Path 1 and Part 2** of **both** input sets.
+
+## Running individual solutions
+If you would like to run any of my solutions against your own input, the easiest way to do so if **cloning this repository**
+and converting the input provided by AoC to the [custom test format](#test-input-format) used by this project. 
+
+If you don't want to clone the entire project, and just want to run a single solution, you can simply copy the contents of
+the `fn solve(&self, input: String)` function to an empty Rust project's `main()`. Make sure to also copy any additional 
+structs, enums or functions that are also defined in the solution's module file, as well as any potential utility structures
+from the [utils](src/utils) folder (e.g. [matrix.rs](src/utils/matrix.rs), [prefix_tree.rs](src/utils/prefix_tree.rs), 
+[position.rs](src/utils/position.rs), [facing.rs](src/utils/facing.rs)).
+
+## Test Input Format
 To respect the rules of Advent of Code, as well as the event's creator, my personalized inputs are not included in this repository.
 This project uses a custom test file format that allows multiple different test cases to be checked easily.
 Each test is prefixed with `@test`, which is followed by the program input. To perform result checking,
