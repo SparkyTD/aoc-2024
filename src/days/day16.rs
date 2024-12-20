@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap, HashSet};
-use std::fmt::{Display, Formatter, Write};
+use std::fmt::{Display};
 use std::hash::{Hash};
 use crate::utils::matrix::Matrix;
 use crate::utils::solution::{solution, Solution};
@@ -15,26 +15,6 @@ struct Maze {
 impl Maze {
     pub fn is_wall(&self, x: usize, y: usize) -> bool {
         *self.map.get(x, y).unwrap_or(&false)
-    }
-}
-
-impl Display for Maze {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        for y in 0..self.map.height() {
-            for x in 0..self.map.width() {
-                if (x, y) == (self.start.x, self.start.y) {
-                    f.write_str("S")?;
-                } else if (x, y) == (self.end.x, self.end.y) {
-                    f.write_str("E")?;
-                } else {
-                    let tile = self.map.get(x, y).unwrap();
-                    f.write_str(if *tile { "#" } else { "." })?;
-                }
-            }
-            f.write_char('\n')?
-        }
-
-        Ok(())
     }
 }
 
@@ -63,6 +43,22 @@ impl Facing {
     pub fn all() -> Vec<Facing> {
         vec![Facing::North, Facing::East, Facing::South, Facing::West]
     }
+
+    pub fn adjacents(&self) -> Vec<Facing> {
+        Facing::all()
+            .into_iter()
+            .filter(|f| *f != *self)
+            .collect::<Vec<Facing>>()
+    }
+
+    pub fn opposite(&self) -> Facing {
+        match self {
+            Facing::East => Facing::West,
+            Facing::South => Facing::North,
+            Facing::West => Facing::East,
+            Facing::North => Facing::South,
+        }
+    }
 }
 
 #[derive(Debug, Eq, PartialEq, Clone)]
@@ -90,10 +86,11 @@ struct Position {
     y: usize,
 }
 
-fn dijkstra(maze: &Maze, cost_matrix: &mut Matrix<i64>, init_facing: Facing) {
+fn dijkstra(maze: &Maze, cost_matrix: &mut Matrix<i64>, init_facing: Facing) -> HashMap<(Position, Facing), usize> {
     let mut visited = HashMap::new(); // (pos, facing) <=> (cost)
     let mut heap = BinaryHeap::new();
 
+    // Push the starting position to the heap
     heap.push(State {
         position: maze.start,
         facing: init_facing,
@@ -101,70 +98,92 @@ fn dijkstra(maze: &Maze, cost_matrix: &mut Matrix<i64>, init_facing: Facing) {
     });
 
     while let Some(current) = heap.pop() {
+        // If we have already visited this tile, and it is cheaper than the current cost, then skip it
         if let Some(visited_cost) = visited.get(&(current.position, current.facing)) {
             if *visited_cost <= current.cost {
                 continue;
             }
         }
 
+        // Otherwise mark the tile as visited
         visited.insert((current.position, current.facing), current.cost);
 
+        // Update the cost matrix with this tile's new cost
         let current_cost = cost_matrix.get_mut(current.position.x, current.position.y).unwrap();
-        if (current.cost as i64) < *current_cost {
-            // println!("[{:?}] {} <- {}", current.position, *current_cost, current.cost);
+        if (current.cost as i64) <= *current_cost {
             *current_cost = current.cost as i64;
         }
 
-        let next_position = current.facing.apply(&current.position);
-        if !maze.is_wall(next_position.x, next_position.y) {
-            heap.push(State {
-                position: next_position,
-                facing: current.facing,
-                cost: current.cost + 1,
-            });
+        // If we've reached the end tile, stop the loop
+        if current.position == maze.end {
+            break;
         }
 
-        for next_facing in Facing::all() {
-            if next_facing == current.facing {
-                continue;
-            }
+        // Check the next tile in all four directions except the opposite of the current
+        for next_facing in current.facing.opposite().adjacents() {
+            // Calculate the turn cost. If current.facing == next_facing then 1000, otherwise 0
+            let turn_cost = next_facing.turn_cost(&current.facing);
 
+            // Get the next position, skip if it's a wall
             let next_position = next_facing.apply(&current.position);
             if maze.is_wall(next_position.x, next_position.y) {
                 continue;
             }
 
+            // Next direction is a valid move, push it on the heap
             heap.push(State {
                 position: next_position,
                 facing: next_facing,
-                cost: current.cost + 1 + current.facing.turn_cost(&next_facing),
+                cost: current.cost + 1 + turn_cost,
             });
         }
     }
+
+    visited
 }
 
-fn find_all_unique_tiles(cost_matrix: &mut Matrix<i64>, position: &Position, unique_tiles: &mut HashSet<Position>, prev_cost: Option<i64>, shortcuts: &mut HashSet<i64>, shortcut_count: &mut usize) {
+fn trace_back(cost_matrix: &mut Matrix<i64>, position: &Position, unique_tiles: &mut HashSet<Position>, prev_cost: Option<i64>, visited: &HashMap<(Position, Facing), usize>) {
+    // Store the position of the current tile
     unique_tiles.insert(*position);
 
+    // Retrieve the cost of this tile
     let cost = *cost_matrix.get(position.x, position.y).unwrap();
 
-    for facing in Facing::all() {
-        let next_position = facing.apply(&position);
+    // Find an adjacent tile that is exactly 1 or 1001 cheaper
+    for next_facing in Facing::all() {
+        let next_position = next_facing.apply(&position);
         let next_cost = *cost_matrix.get(next_position.x, next_position.y).unwrap();
-        if next_cost == i64::MAX {
+
+        // Skip if the next tile is a wall, or hasn't been touched by Dijkstra
+        if next_cost == i64::MAX || next_cost == cost + 1 || next_cost == cost + 1001 {
             continue;
         }
 
-        if next_cost < cost {
-            find_all_unique_tiles(cost_matrix, &next_position, unique_tiles, Some(cost), shortcuts, shortcut_count);
-        } else if let Some(prev_cost) = prev_cost {
-            if cost == prev_cost - 1000 - 1 && prev_cost - next_cost == 2 {
-                if shortcuts.contains(&prev_cost) {
-                    *shortcut_count += 1;
+        let prev_cost = prev_cost.unwrap_or(i64::MAX);
+
+        let is_straight_case = next_cost == cost - 1;
+        let is_corner_case = next_cost == cost - 1001;
+
+        if is_straight_case || is_corner_case {
+            trace_back(cost_matrix, &next_position, unique_tiles, Some(cost), visited);
+        } else {
+            // This is probably an intersection or a T-junction
+            // First, check if there is a valid path straight ahead
+            if let Some(&next_cost) = visited.get(&(*position, next_facing.opposite())) {
+                if next_cost - 1000 == cost as usize && prev_cost - cost != 1 {
+                    trace_back(cost_matrix, &next_position, unique_tiles, Some(cost), visited);
                 }
-                shortcuts.insert(next_cost);
-                cost_matrix.set(position.x, position.y, i64::MAX);
-                find_all_unique_tiles(cost_matrix, &next_position, unique_tiles, Some(next_cost), shortcuts, shortcut_count);
+            }
+
+            for adj_facing in Facing::all() {
+                if let Some(adj_cost) = visited.get(&(next_position, adj_facing)) {
+                    if *adj_cost == cost as usize - 1 && next_facing == adj_facing.opposite() {
+                        cost_matrix.set(next_position.x, next_position.y, *adj_cost as i64);
+                        trace_back(cost_matrix, &next_position, unique_tiles, Some(*adj_cost as i64), visited);
+
+                        break;
+                    }
+                }
             }
         }
     }
@@ -177,6 +196,7 @@ pub struct ReindeerMaze;
 
 impl Solution for ReindeerMaze {
     fn solve(&self, input: String) -> (Box<dyn Display>, Box<dyn Display>) {
+        // Load the maze from the input
         let mut maze = Maze::default();
         let map = Matrix::<char>::from_text(&input)
             .map_xy(|data, x, y| {
@@ -189,17 +209,20 @@ impl Solution for ReindeerMaze {
             });
         maze.map = map;
 
+        // Create a "Cost Matrix" to store the cost of each non-wall tile from the start tile (steps + 1000 * turns)
         let mut cost_matrix = maze.map.map(|_| i64::MAX);
         cost_matrix.set(maze.start.x, maze.start.y, 0);
 
-        dijkstra(&maze, &mut cost_matrix, Facing::East);
+        // Populate the cost matrix using Dijkstra's Algorithm to traverse the whole maze
+        let visited = dijkstra(&maze, &mut cost_matrix, Facing::East);
 
+        // By the end of dijkstra(), the end tile will store the cost of the cheapest path (the solution to Part 1)
         let lowest_cost = *cost_matrix.get(maze.end.x, maze.end.y).unwrap();
 
+        // Recursively walk all "downwards slope" paths from end to start, storing each unique tile
         let mut unique_tiles = HashSet::new();
-        let mut shortcuts = HashSet::new();
-        let mut shortcut_count = 0;
-        find_all_unique_tiles(&mut cost_matrix, &maze.end, &mut unique_tiles, None, &mut shortcuts, &mut shortcut_count);
-        solution!(lowest_cost, unique_tiles.len() - shortcut_count)
+        trace_back(&mut cost_matrix, &maze.end, &mut unique_tiles, None, &visited);
+
+        solution!(lowest_cost, unique_tiles.len())
     }
 }

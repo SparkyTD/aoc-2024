@@ -84,7 +84,7 @@ impl AdventOfCode {
                 None => "[Inconclusive]".white(),
                 Some(result) => match (result.part1_success, result.part2_success) {
                     (Some(true), Some(true)) | (Some(true), None) | (None, Some(true)) => "[Success]".bright_green().bold(),
-                    (Some(false), _) | (_, Some(false)) => "[Fail]".red().bold(),
+                    (Some(false), _) | (_, Some(false)) => " [Fail!] ".red().bold(),
                     (None, None) => "[Inconclusive]".white(),
                 }
             };

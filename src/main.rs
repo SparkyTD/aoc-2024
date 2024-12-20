@@ -49,6 +49,6 @@ fn main() {
     aoc.add_solution(18, Box::new(RAMRun::default()));
     aoc.add_solution(19, Box::new(LinenLayout::default()));
 
-    //aoc.solve_day(19, SolveTest::Index(1));
-    aoc.solve_all();
+    aoc.solve_day(16, SolveTest::Last);
+    //aoc.solve_all();
 }
