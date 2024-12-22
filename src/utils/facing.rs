@@ -18,6 +18,22 @@ impl Facing {
         }
     }
 
+    #[allow(dead_code)]
+    pub fn try_apply(&self, position: &Position) -> Option<Position> {
+        let new_position = match self {
+            Facing::East => (position.x as i64 + 1, position.y as i64 ),
+            Facing::West => (position.x as i64 - 1, position.y as i64 ),
+            Facing::South => (position.x as i64, position.y as i64 + 1 ),
+            Facing::North => (position.x as i64, position.y as i64 - 1 ),
+        };
+
+        if new_position.0 < 0 || new_position.1 < 0 {
+            None
+        } else {
+            Some(Position::new(new_position.0 as usize, new_position.1 as usize))
+        }
+    }
+
     pub fn all() -> Vec<Facing> {
         vec![Facing::North, Facing::East, Facing::South, Facing::West]
     }
