@@ -1,4 +1,5 @@
 #![feature(str_split_whitespace_remainder)]
+#![feature(hash_raw_entry)]
 #![feature(extend_one)]
 
 use crate::days::day10::HoofIt;
@@ -14,6 +15,7 @@ use crate::days::day19::LinenLayout;
 use crate::days::day1::HistorianHysteria;
 use crate::days::day20::RaceCondition;
 use crate::days::day21::KeypadConundrum;
+use crate::days::day22::MonkeyMarket;
 use crate::days::day2::RedNosedReports;
 use crate::days::day3::MullItOver;
 use crate::days::day4::CeresSearch;
@@ -53,7 +55,8 @@ fn main() {
     aoc.add_solution(19, Box::new(LinenLayout::default()));
     aoc.add_solution(20, Box::new(RaceCondition::default()));
     aoc.add_solution(21, Box::new(KeypadConundrum::default()));
+    aoc.add_solution(22, Box::new(MonkeyMarket::default()));
 
-    //aoc.solve_day(21, SolveTest::Index(1));
+    //aoc.solve_day(22, SolveTest::Index(2));
     aoc.solve_all();
 }
