@@ -16,6 +16,7 @@ use crate::days::day1::HistorianHysteria;
 use crate::days::day20::RaceCondition;
 use crate::days::day21::KeypadConundrum;
 use crate::days::day22::MonkeyMarket;
+use crate::days::day23::LanParty;
 use crate::days::day2::RedNosedReports;
 use crate::days::day3::MullItOver;
 use crate::days::day4::CeresSearch;
@@ -56,7 +57,8 @@ fn main() {
     aoc.add_solution(20, Box::new(RaceCondition::default()));
     aoc.add_solution(21, Box::new(KeypadConundrum::default()));
     aoc.add_solution(22, Box::new(MonkeyMarket::default()));
+    aoc.add_solution(23, Box::new(LanParty::default()));
 
-    //aoc.solve_day(22, SolveTest::Index(2));
+    //aoc.solve_day(23, SolveTest::Index(1));
     aoc.solve_all();
 }
