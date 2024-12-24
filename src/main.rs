@@ -59,6 +59,6 @@ fn main() {
     aoc.add_solution(22, Box::new(MonkeyMarket::default()));
     aoc.add_solution(23, Box::new(LanParty::default()));
 
-    //aoc.solve_day(23, SolveTest::Index(1));
+    //aoc.solve_day(23, SolveTest::All);
     aoc.solve_all();
 }
