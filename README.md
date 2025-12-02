@@ -6,54 +6,54 @@ It is also part of my Rust learning journey, as I did not have a lot of experien
 <!-- {RESULTS_START} -->
 | Day | Status | Execution Time Comparison | Execution Time |
 |-----|--------|---------------------------|----------------|
-|[1](src/days/day1.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|654µs|
-|[2](src/days/day2.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|219µs|
-|[3](src/days/day3.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|88µs|
-|[4](src/days/day4.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/1/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|1ms|
-|[5](src/days/day5.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/13/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|16ms|
-|[6](src/days/day6.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/83/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|107ms|
-|[7](src/days/day7.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/57/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|73ms|
-|[8](src/days/day8.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|336µs|
-|[9](src/days/day9.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/44/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|57ms|
-|[10](src/days/day10.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|722µs|
-|[11](src/days/day11.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/7/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|10ms|
-|[12](src/days/day12.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/36/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|46ms|
-|[13](src/days/day13.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|81µs|
-|[14](src/days/day14.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/32/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|41ms|
-|[15](src/days/day15.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|880µs|
-|[16](src/days/day16.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/5/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|7ms|
-|[17](src/days/day17.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|55µs|
-|[18](src/days/day18.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/11/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|14ms|
-|[19](src/days/day19.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/2/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|2ms|
-|[20](src/days/day20.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/35/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|45ms|
-|[21](src/days/day21.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|414µs|
-|[22](src/days/day22.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/55/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|71ms|
-|[23](src/days/day23.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/14/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|18ms|
-<!-- {DAY 1=654} -->
-<!-- {DAY 2=219} -->
-<!-- {DAY 3=88} -->
-<!-- {DAY 4=1704} -->
-<!-- {DAY 5=16852} -->
-<!-- {DAY 6=107328} -->
-<!-- {DAY 7=73726} -->
-<!-- {DAY 8=336} -->
-<!-- {DAY 9=57178} -->
-<!-- {DAY 10=722} -->
-<!-- {DAY 11=10290} -->
-<!-- {DAY 12=46690} -->
-<!-- {DAY 13=81} -->
-<!-- {DAY 14=41513} -->
-<!-- {DAY 15=880} -->
-<!-- {DAY 16=7366} -->
-<!-- {DAY 17=55} -->
-<!-- {DAY 18=14502} -->
-<!-- {DAY 19=2626} -->
-<!-- {DAY 20=45482} -->
-<!-- {DAY 21=414} -->
-<!-- {DAY 22=71606} -->
-<!-- {DAY 23=18627} -->
+|[1](src/days/day1.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|311µs|
+|[2](src/days/day2.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|113µs|
+|[3](src/days/day3.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|59µs|
+|[4](src/days/day4.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/1/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|759µs|
+|[5](src/days/day5.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/15/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|8ms|
+|[6](src/days/day6.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/53/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|28ms|
+|[7](src/days/day7.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/50/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|26ms|
+|[8](src/days/day8.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|112µs|
+|[9](src/days/day9.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/33/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|18ms|
+|[10](src/days/day10.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|366µs|
+|[11](src/days/day11.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/10/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|5ms|
+|[12](src/days/day12.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/41/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|22ms|
+|[13](src/days/day13.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|42µs|
+|[14](src/days/day14.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/33/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|17ms|
+|[15](src/days/day15.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|515µs|
+|[16](src/days/day16.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/6/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|3ms|
+|[17](src/days/day17.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|31µs|
+|[18](src/days/day18.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/13/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|7ms|
+|[19](src/days/day19.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/2/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|1ms|
+|[20](src/days/day20.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/19/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|10ms|
+|[21](src/days/day21.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/0/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|193µs|
+|[22](src/days/day22.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/83/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|44ms|
+|[23](src/days/day23.rs)|![Static Badge](https://img.shields.io/badge/Success-green?style=flat)|![Static Badge](https://progress-bar.xyz/16/?width=500&progress_color=8935D9&progress_background=404040&show_text=false)|8ms|
+<!-- {DAY 1=311} -->
+<!-- {DAY 2=113} -->
+<!-- {DAY 3=59} -->
+<!-- {DAY 4=759} -->
+<!-- {DAY 5=8514} -->
+<!-- {DAY 6=28621} -->
+<!-- {DAY 7=26708} -->
+<!-- {DAY 8=112} -->
+<!-- {DAY 9=18020} -->
+<!-- {DAY 10=366} -->
+<!-- {DAY 11=5663} -->
+<!-- {DAY 12=22016} -->
+<!-- {DAY 13=42} -->
+<!-- {DAY 14=17902} -->
+<!-- {DAY 15=515} -->
+<!-- {DAY 16=3708} -->
+<!-- {DAY 17=31} -->
+<!-- {DAY 18=7019} -->
+<!-- {DAY 19=1240} -->
+<!-- {DAY 20=10318} -->
+<!-- {DAY 21=193} -->
+<!-- {DAY 22=44453} -->
+<!-- {DAY 23=8730} -->
 <!-- {RESULTS_END} -->
-*The table above is automatically generated with each execution of the test suite.*
+*The table above is automatically generated with each execution of the test suite. The tests were run on a Ryzen 9 9950X3D.*
 
 **NOTE:** Every solution has been validated against **two separate inputs** from two different [adventofcode.com](https://adventofcode.com) accounts.
 A `Success` badge next to a day means that the solution produced the correct results for both **Path 1 and Part 2** of **both** input sets.
