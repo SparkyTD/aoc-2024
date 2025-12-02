@@ -1,5 +1,4 @@
 #![feature(str_split_whitespace_remainder)]
-#![feature(hash_raw_entry)]
 #![feature(extend_one)]
 
 use crate::days::day10::HoofIt;
